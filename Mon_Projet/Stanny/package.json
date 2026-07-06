@@ -3,6 +3,10 @@
   "version": "1.0.0",
   "private": true,
   "scripts": {
-    "docker": "npm run docker --prefix backend"
+    "docker": "npm run docker --prefix backend",
+    "dev": "vercel dev"
+  },
+  "dependencies": {
+    "cors": "^2.8.5"
   }
 }
