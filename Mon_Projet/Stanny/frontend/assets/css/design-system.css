@@ -1,0 +1,126 @@
+/**
+ * STATCOM SERVICES - Design System
+ * Premium Neumorphic & Glassmorphic Styles
+ */
+
+:root {
+    /* STATCOM Brand Colors */
+    --statcom-blue: #0056b3;
+    --statcom-blue-dark: #001c3d;
+    --statcom-blue-light: #3399ff;
+    --statcom-orange: #FF6B00;
+    --statcom-orange-glow: rgba(255, 107, 0, 0.4);
+    
+    /* Neutral Palette for Neumorphism */
+    --nm-bg: #f0f2f5;
+    --nm-light: #ffffff;
+    --nm-shadow: #d1d9e6;
+    
+    /* Animation Speeds */
+    --trans-fast: 0.2s ease;
+    --trans-med: 0.4s ease;
+}
+
+/* Glassmorphism Classes */
+.glass-card {
+    background: rgba(255, 255, 255, 0.1);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+}
+
+.glass-input {
+    background: rgba(255, 255, 255, 0.05);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: white;
+    transition: var(--trans-fast);
+}
+
+.glass-input:focus {
+    background: rgba(255, 255, 255, 0.1);
+    border-color: var(--statcom-blue-light);
+    outline: none;
+    box-shadow: 0 0 10px var(--statcom-blue-light);
+}
+
+/* Neumorphism Classes */
+.nm-flat {
+    background: var(--nm-bg);
+    box-shadow: 9px 9px 16px var(--nm-shadow), 
+                -9px -9px 16px var(--nm-light);
+}
+
+.nm-convex {
+    background: var(--nm-bg);
+    box-shadow: inset 5px 5px 10px var(--nm-shadow), 
+                inset -5px -5px 10px var(--nm-light);
+}
+
+.nm-button {
+    background: var(--nm-bg);
+    box-shadow: 5px 5px 10px var(--nm-shadow), 
+                -5px -5px 10px var(--nm-light);
+    transition: all 0.2s ease;
+}
+
+.nm-button:active {
+    box-shadow: inset 2px 2px 5px var(--nm-shadow), 
+                inset -2px -2px 5px var(--nm-light);
+    transform: scale(0.98);
+}
+
+/* Premium Buttons */
+.btn-premium {
+    background: linear-gradient(135deg, var(--statcom-blue) 0%, #7000ff 100%);
+    color: white;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    border: none;
+    box-shadow: 0 4px 15px rgba(0, 86, 179, 0.4);
+    transition: var(--trans-med);
+}
+
+.btn-premium:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 25px rgba(0, 86, 179, 0.6);
+    filter: brightness(1.1);
+}
+
+/* Typography & Layout Polish */
+body {
+    background-color: var(--nm-bg);
+}
+
+h1, h2, h3 {
+    letter-spacing: -0.02em;
+}
+
+/* Custom Scrollbar */
+::-webkit-scrollbar {
+    width: 6px;
+}
+
+::-webkit-scrollbar-track {
+    background: var(--nm-bg);
+}
+
+::-webkit-scrollbar-thumb {
+    background: var(--statcom-blue);
+    border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+    background: var(--statcom-blue-dark);
+}
+
+/* Animations */
+@keyframes fadeInSlideUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.animate-premium {
+    animation: fadeInSlideUp 0.6s cubic-bezier(0.23, 1, 0.32, 1) forwards;
+}

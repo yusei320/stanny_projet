@@ -1,0 +1,36 @@
+version: '3.8'
+
+services:
+  db:
+    image: postgres:15-alpine
+    container_name: statcom_db_container
+    restart: always
+    env_file:
+      - backend/.env
+    environment:
+      POSTGRES_USER: ${DB_USER:-postgres}
+      POSTGRES_PASSWORD: ${DB_PASSWORD:-postgre}
+      POSTGRES_DB: ${DB_NAME:-statcom_db}
+    ports:
+      - "${DB_PORT:-5432}:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  backend:
+    build:
+      context: .
+      dockerfile: backend/Dockerfile
+    container_name: statcom_backend_container
+    restart: always
+    ports:
+      - "${PORT:-3000}:${PORT:-3000}"
+    env_file:
+      - backend/.env
+    environment:
+      - DB_HOST=db
+      - DATABASE_URL=postgres://${DB_USER:-postgres}:${DB_PASSWORD:-postgre}@db:5432/${DB_NAME:-statcom_db}
+    depends_on:
+      - db
+
+volumes:
+  pgdata:

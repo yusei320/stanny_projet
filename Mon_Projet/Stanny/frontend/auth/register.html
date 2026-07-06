@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inscription - STATCOM SERVICES</title>
+    <link rel="icon" type="image/jpeg" href="/assets/img/logo.jpg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="/css/style.css">
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            min-height: 100vh;
+            background: #020915;
+            overflow-x: hidden;
+            overflow-y: auto;
+        }
+
+        /* Tech Background */
+        .bg-layer {
+            position: fixed;
+            inset: 0;
+            background: url('/assets/img/tech-bg.png') center/cover no-repeat;
+            z-index: 0;
+        }
+
+        .bg-layer::after {
+            content: '';
+            position: absolute;
+            inset: 0;
+            background: linear-gradient(135deg,
+                rgba(0, 10, 30, 0.75) 0%,
+                rgba(0, 50, 120, 0.55) 50%,
+                rgba(0, 10, 30, 0.75) 100%);
+        }
+
+        /* Animated particles */
+        .particles {
+            position: fixed;
+            inset: 0;
+            z-index: 1;
+            pointer-events: none;
+        }
+
+        .particle {
+            position: absolute;
+            width: 2px;
+            height: 2px;
+            border-radius: 50%;
+            background: #3399ff;
+            animation: float-particle linear infinite;
+            opacity: 0;
+        }
+
+        @keyframes float-particle {
+            0%   { transform: translateY(100vh) translateX(0); opacity: 0; }
+            10%  { opacity: 0.8; }
+            90%  { opacity: 0.4; }
+            100% { transform: translateY(-10vh) translateX(30px); opacity: 0; }
+        }
+
+        /* Main Card */
+        .auth-card {
+            position: relative;
+            z-index: 10;
+            margin: auto; /* Permet un centrage vertical flexible et évite les gaps */
+            background: rgba(255, 255, 255, 0.06);
+            backdrop-filter: blur(20px);
+            -webkit-backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.15);
+            border-radius: 24px;
+            padding: 48px 44px;
+            width: 100%;
+            max-width: 420px;
+            box-shadow: 0 8px 64px rgba(0, 86, 179, 0.3), inset 0 1px 0 rgba(255, 255, 255, 0.15);
+            animation: slideInCard 0.7s cubic-bezier(0.23, 1, 0.32, 1) both;
+        }
+
+        @keyframes slideInCard {
+            from { opacity: 0; transform: translateY(30px) scale(0.96); }
+            to   { opacity: 1; transform: translateY(0) scale(1); }
+        }
+
+        .brand-logo {
+            width: 190px;
+            height: auto;
+            display: block;
+            margin: 0 auto 32px;
+            filter: contrast(1.1) saturate(1.08) drop-shadow(0 4px 10px rgba(0, 0, 0, 0.35));
+        }
+
+        .auth-title {
+            font-size: 20px;
+            font-weight: 700;
+            color: #fff;
+            text-align: center;
+            margin-bottom: 28px;
+            letter-spacing: -0.3px;
+        }
+
+        .input-group { position: relative; margin-bottom: 14px; }
+        .input-group i { position: absolute; left: 16px; top: 50%; transform: translateY(-50%); color: rgba(255, 255, 255, 0.35); font-size: 14px; pointer-events: none; }
+        .input-group .eye-toggle { left: auto; right: 16px; cursor: pointer; pointer-events: all; }
+
+        .input-group input {
+            width: 100%;
+            padding: 14px 16px 14px 44px;
+            background: rgba(255, 255, 255, 0.07);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 12px;
+            color: #fff;
+            font-family: 'Outfit', sans-serif;
+            font-size: 14px;
+            outline: none;
+            transition: all 0.25s;
+        }
+
+        .input-group input:focus { background: rgba(51, 153, 255, 0.12); border-color: #3399ff; }
+
+        .btn-register {
+            width: 100%; padding: 15px; margin-top: 8px;
+            background: linear-gradient(135deg, #0056b3 0%, #3399ff 100%);
+            border: none; border-radius: 12px; color: #fff; font-weight: 700; cursor: pointer; transition: all 0.3s;
+        }
+
+        .btn-register:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(51, 153, 255, 0.5); }
+
+        .auth-links { display: flex; justify-content: center; align-items: center; margin-top: 20px; gap: 6px; }
+        .auth-links span { color: rgba(255, 255, 255, 0.5); font-size: 13px; }
+        .auth-links a { color: #3399ff; font-size: 13px; font-weight: 600; text-decoration: none; }
+
+        .divider { display: flex; align-items: center; gap: 12px; margin-top: 20px; }
+        .divider::before, .divider::after { content: ''; flex: 1; height: 1px; background: rgba(255, 255, 255, 0.1); }
+        .divider span { color: rgba(255, 255, 255, 0.35); font-size: 12px; }
+
+        .error-msg {
+            background: rgba(239, 68, 68, 0.15); border: 1px solid rgba(239, 68, 68, 0.3);
+            color: #fca5a5; padding: 10px 14px; border-radius: 10px; font-size: 13px;
+            margin-bottom: 14px; display: none; align-items: center; gap: 8px;
+        }
+        .error-msg.show { display: flex; }
+
+        /* Password strength meter */
+        .pwd-strength { display: flex; gap: 4px; margin-top: 6px; }
+        .pwd-strength .bar { flex: 1; height: 3px; border-radius: 2px; background: rgba(255,255,255,0.1); transition: background 0.3s; }
+        .pwd-strength .bar.weak { background: #ef4444; }
+        .pwd-strength .bar.medium { background: #f59e0b; }
+        .pwd-strength .bar.strong { background: #22c55e; }
+        .pwd-hint { font-size: 11px; color: rgba(255,255,255,0.35); margin-top: 4px; }
+
+        .btn-register.loading { opacity: 0.8; pointer-events: none; }
+    </style>
+</head>
+<body>
+    <!-- Tech Background -->
+    <div class="bg-layer"></div>
+
+    <!-- Floating Particles -->
+    <div class="particles" id="particles"></div>
+
+    <!-- Auth Card -->
+    <div class="auth-card">
+        <!-- Logo -->
+        <div class="logo-wrap">
+            <div class="logo-img-wrap">
+                <img
+                    src="/assets/img/logo.png"
+                    alt="STATCOM SERVICES"
+                    id="brandLogo"
+                    class="brand-logo"
+                    onerror="this.onerror=null;this.src='/assets/img/logo.png';"
+                >
+            </div>
+        </div>
+
+        <div class="auth-title">Créer un compte</div>
+
+        <!-- Error Message -->
+        <div class="error-msg" id="errorMsg">
+            <i class="fas fa-exclamation-circle"></i>
+            <span id="errorText">Une erreur est survenue.</span>
+        </div>
+
+        <!-- Form -->
+        <form id="registerForm" autocomplete="off">
+            <div class="input-group">
+                <i class="fas fa-user"></i>
+                <input type="text" id="name" placeholder="Nom complet" required autocomplete="name">
+            </div>
+
+            <div class="input-group">
+                <i class="fas fa-envelope"></i>
+                <input type="email" id="email" placeholder="Adresse e-mail" required autocomplete="email">
+            </div>
+
+            <div class="input-group">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="password" placeholder="Mot de passe" required autocomplete="new-password">
+                <i class="fas fa-eye eye-toggle" id="togglePwd" onclick="togglePassword('password', 'togglePwd')"></i>
+            </div>
+            <div class="pwd-strength" id="pwdStrength">
+                <div class="bar" id="bar1"></div>
+                <div class="bar" id="bar2"></div>
+                <div class="bar" id="bar3"></div>
+                <div class="bar" id="bar4"></div>
+            </div>
+            <div class="pwd-hint" id="pwdHint">Min. 6 caractères</div>
+
+            <div class="input-group" style="margin-top:10px;">
+                <i class="fas fa-lock"></i>
+                <input type="password" id="confirmPassword" placeholder="Confirmer le mot de passe" required autocomplete="new-password">
+                <i class="fas fa-eye eye-toggle" id="togglePwdConfirm" onclick="togglePassword('confirmPassword', 'togglePwdConfirm')"></i>
+            </div>
+
+            <button type="submit" class="btn-register" id="registerBtn">
+                <span>S'INSCRIRE</span>
+            </button>
+        </form>
+
+        <div class="auth-links">
+            <span>Vous avez déjà un compte ?</span>
+            <a href="/login">SE CONNECTER →</a>
+        </div>
+
+        <div class="divider">
+            <span>STATCOM SERVICES</span>
+        </div>
+    </div>
+    <script>
+        // ─── Remove white logo background (JPEG fallback) ────────────────
+        function makeWhiteTransparent(imageEl) {
+            if (!imageEl) return;
+            const src = imageEl.currentSrc || imageEl.src || '';
+            if (!src) return;
+
+            const probe = new Image();
+            probe.crossOrigin = 'anonymous';
+            probe.onload = () => {
+                try {
+                    const canvas = document.createElement('canvas');
+                    canvas.width = probe.naturalWidth;
+                    canvas.height = probe.naturalHeight;
+                    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+                    ctx.drawImage(probe, 0, 0);
+                    const imgData = ctx.getImageData(0, 0, canvas.width, canvas.height);
+                    const px = imgData.data;
+
+                    for (let i = 0; i < px.length; i += 4) {
+                        const r = px[i];
+                        const g = px[i + 1];
+                        const b = px[i + 2];
+                        if (r > 235 && g > 235 && b > 235) {
+                            px[i + 3] = 0;
+                        }
+                    }
+
+                    ctx.putImageData(imgData, 0, 0);
+                    imageEl.src = canvas.toDataURL('image/png');
+                } catch (_) {
+                    // If canvas processing fails, keep original logo.
+                }
+            };
+            probe.src = src;
+        }
+
+        window.addEventListener('DOMContentLoaded', () => {
+            makeWhiteTransparent(document.getElementById('brandLogo'));
+        });
+
+        // ─── Particles ──────────────────────────────────────────────────
+        const container = document.getElementById('particles');
+        for (let i = 0; i < 30; i++) {
+            const p = document.createElement('div');
+            p.className = 'particle';
+            p.style.left = Math.random() * 100 + 'vw';
+            p.style.width = p.style.height = (Math.random() * 3 + 1) + 'px';
+            p.style.animationDuration = (Math.random() * 12 + 6) + 's';
+            p.style.animationDelay = (Math.random() * 10) + 's';
+            p.style.background = Math.random() > 0.5 ? '#3399ff' : '#00c4ff';
+            container.appendChild(p);
+        }
+
+        // ─── Password Toggle ─────────────────────────────────────────────
+        function togglePassword(inputId, iconId) {
+            const input = document.getElementById(inputId);
+            const icon = document.getElementById(iconId);
+            if (input.type === 'password') {
+                input.type = 'text';
+                icon.classList.replace('fa-eye', 'fa-eye-slash');
+            } else {
+                input.type = 'password';
+                icon.classList.replace('fa-eye-slash', 'fa-eye');
+            }
+        }
+
+        // ─── Password Strength ─────────────────────────────────────────
+        document.getElementById('password').addEventListener('input', function() {
+            const pwd = this.value;
+            const bars = [document.getElementById('bar1'), document.getElementById('bar2'), document.getElementById('bar3'), document.getElementById('bar4')];
+            const hint = document.getElementById('pwdHint');
+            
+            // Reset
+            bars.forEach(b => b.className = 'bar');
+            
+            let score = 0;
+            if (pwd.length >= 6) score++;
+            if (pwd.length >= 8) score++;
+            if (/[A-Z]/.test(pwd) && /[0-9]/.test(pwd)) score++;
+            if (/[^A-Za-z0-9]/.test(pwd)) score++;
+            
+            const levels = ['', 'weak', 'medium', 'medium', 'strong'];
+            const hints = ['Min. 6 caractères', 'Faible', 'Moyen', 'Bon', 'Excellent'];
+            
+            for (let i = 0; i < score; i++) {
+                bars[i].classList.add(levels[score]);
+            }
+            hint.textContent = hints[score];
+        });
+
+        // ─── Error Display ────────────────────────────────────────────────
+        function showError(msg) {
+            const el = document.getElementById('errorMsg');
+            document.getElementById('errorText').textContent = msg;
+            el.classList.add('show');
+        }
+
+        function hideError() {
+            document.getElementById('errorMsg').classList.remove('show');
+        }
+
+        // ─── Register Form ────────────────────────────────────────────────
+        document.getElementById('registerForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            hideError();
+
+            const name = document.getElementById('name').value;
+            const email = document.getElementById('email').value;
+            const password = document.getElementById('password').value;
+            const confirmPassword = document.getElementById('confirmPassword').value;
+
+            if (password !== confirmPassword) {
+                showError('Les mots de passe ne correspondent pas.');
+                return;
+            }
+
+            if (password.length < 6) {
+                showError('Le mot de passe doit contenir au moins 6 caractères.');
+                return;
+            }
+
+            const btn = document.getElementById('registerBtn');
+            btn.classList.add('loading');
+
+            try {
+                const response = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ name, email, password })
+                });
+                const data = await response.json();
+                if (data.success) {
+                    localStorage.setItem('token', data.token);
+                    localStorage.setItem('user', JSON.stringify(data.user));
+                    window.location.href = '/dashboard';
+                } else {
+                    showError(data.message || 'Erreur lors de l\'inscription.');
+                }
+            } catch (err) {
+                showError('Erreur de connexion. Vérifiez votre réseau.');
+            } finally {
+                btn.classList.remove('loading');
+            }
+        });
+
+        // Hide error on input
+        document.querySelectorAll('input').forEach(i => i.addEventListener('input', hideError));
+    </script>
+</body>
+</html>

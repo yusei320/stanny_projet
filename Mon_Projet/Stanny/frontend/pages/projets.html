@@ -1,0 +1,1509 @@
+<!DOCTYPE html>
+<html lang="fr">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Projets - STATCOM SERVICES</title>
+    <link rel="icon" type="image/jpeg" href="/assets/img/logo.jpg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet">
+    <style>
+
+       
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Outfit', sans-serif;
+            background: #0a0e1a;
+            color: #e0e6f0;
+            min-height: 100vh;
+            display: flex;
+        }
+
+        /* ─── Sidebar (shared) ─────────────────────────────────── */
+        .sidebar {
+            width: 260px;
+            background: rgba(255, 255, 255, 0.03);
+            border-right: 1px solid rgba(255, 255, 255, 0.06);
+            display: flex;
+            flex-direction: column;
+            flex-shrink: 0;
+            height: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
+            backdrop-filter: blur(10px);
+        }
+
+        /* ─── Stats Mini Blocs ────────────────────────────────── */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 20px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card-mini {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            padding: 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            transition: 0.3s;
+        }
+
+        .stat-card-mini:hover {
+            background: rgba(255, 255, 255, 0.05);
+            transform: translateY(-2px);
+        }
+
+        .stat-icon-mini {
+            width: 40px;
+            height: 40px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 16px;
+        }
+
+        .stat-val-mini {
+            font-size: 18px;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .stat-lab-mini {
+            font-size: 10px;
+            color: rgba(255, 255, 255, 0.4);
+            text-transform: uppercase;
+        }
+
+        .blue-icon {
+            background: rgba(168, 85, 247, 0.15);
+            color: #a855f7;
+        }
+
+        .green-icon {
+            background: rgba(34, 197, 94, 0.15);
+            color: #22c55e;
+        }
+
+        .orange-icon {
+            background: rgba(245, 158, 11, 0.15);
+            color: #f59e0b;
+        }
+
+
+
+        /* ─── Progress Bar ────────────────────────────────────── */
+        .progress-container {
+            width: 100%;
+            height: 6px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 10px;
+            margin-top: 8px;
+            overflow: hidden;
+        }
+
+        .progress-bar {
+            height: 100%;
+            border-radius: 10px;
+            transition: width 0.5s ease;
+        }
+
+        /* ─── Data Table View ────────────────────────────────── */
+        .data-card {
+            background: rgba(255, 255, 255, 0.03);
+            border: 1px solid rgba(255, 255, 255, 0.06);
+            border-radius: 16px;
+            overflow: hidden;
+            margin-top: 24px;
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .data-table th {
+            text-align: left;
+            padding: 14px 20px;
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.3);
+            text-transform: uppercase;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .data-table td {
+            padding: 16px 20px;
+            font-size: 13px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.03);
+        }
+
+        .view-toggle {
+            display: flex;
+            background: rgba(255, 255, 255, 0.05);
+            padding: 4px;
+            border-radius: 10px;
+            gap: 4px;
+        }
+
+        .toggle-btn {
+            padding: 6px 12px;
+            border-radius: 8px;
+            border: none;
+            background: none;
+            color: rgba(255, 255, 255, 0.4);
+            cursor: pointer;
+            font-size: 11px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            transition: 0.2s;
+        }
+
+        .toggle-btn.active {
+            background: rgba(168, 85, 247, 0.1);
+            color: #a855f7;
+        }
+
+        .project-links {
+            display: flex;
+            gap: 8px;
+            margin-top: 12px;
+        }
+
+        .link-icon {
+            width: 28px;
+            height: 28px;
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+            background: rgba(255, 255, 255, 0.05);
+            color: rgba(255, 255, 255, 0.4);
+            transition: 0.2s;
+            text-decoration: none;
+        }
+
+        .link-icon:hover {
+            background: rgba(168, 85, 247, 0.2);
+            color: #a855f7;
+        }
+
+        .sidebar-brand {
+            padding: 24px 20px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            text-align: center;
+        }
+
+        .sidebar-brand a {
+            text-decoration: none;
+        }
+
+        .sidebar-brand .brand-name {
+            font-size: 22px;
+            font-weight: 800;
+            color: #fff;
+        }
+
+        .sidebar-brand .brand-name span {
+            color: #3399ff;
+        }
+
+        .sidebar-brand .brand-sub {
+            font-size: 10px;
+            letter-spacing: 4px;
+            color: rgba(255, 255, 255, 0.4);
+            text-transform: uppercase;
+            margin-top: 2px;
+        }
+
+        .sidebar-nav {
+            flex: 1;
+            padding: 16px 12px;
+            overflow-y: auto;
+        }
+
+        .sidebar-nav .nav-section {
+            font-size: 10px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            padding: 12px 12px 6px;
+        }
+
+        .nav-link {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 11px 14px;
+            border-radius: 10px;
+            color: rgba(255, 255, 255, 0.55);
+            text-decoration: none;
+            font-size: 14px;
+            font-weight: 500;
+            transition: all 0.2s ease;
+            margin-bottom: 2px;
+        }
+
+        .nav-link:hover {
+            background: rgba(168, 85, 247, 0.08);
+            color: #fff;
+        }
+
+        .nav-link.active {
+            background: linear-gradient(135deg, rgba(168, 85, 247, 0.15), rgba(168, 85, 247, 0.05));
+            color: #a855f7;
+            border-left: 3px solid #a855f7;
+        }
+
+        .nav-link i {
+            width: 20px;
+            text-align: center;
+            font-size: 15px;
+        }
+
+        .nav-dropdown-btn {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 11px 14px;
+            border-radius: 10px;
+            color: rgba(255, 255, 255, 0.55);
+            background: none;
+            border: none;
+            font-family: 'Outfit', sans-serif;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            width: 100%;
+            margin-bottom: 2px;
+        }
+
+        .nav-dropdown-btn:hover {
+            background: rgba(168, 85, 247, 0.08);
+            color: #fff;
+        }
+
+        .nav-dropdown-btn i:first-child {
+            width: 20px;
+            text-align: center;
+            font-size: 15px;
+        }
+
+        .nav-dropdown-btn .chevron {
+            margin-left: auto;
+            font-size: 11px;
+            transition: transform 0.3s;
+        }
+
+        .nav-dropdown-btn.open .chevron {
+            transform: rotate(180deg);
+        }
+
+        .nav-dropdown {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.3s ease;
+        }
+
+        .nav-dropdown.open {
+            max-height: 200px;
+        }
+
+        .nav-dropdown .nav-link {
+            padding-left: 48px;
+            font-size: 13px;
+        }
+
+        .sidebar-footer {
+            padding: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .user-card {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: background 0.2s;
+            position: relative;
+        }
+
+        .user-card:hover {
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .user-avatar {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            object-fit: cover;
+            border: 2px solid rgba(168, 85, 247, 0.3);
+        }
+
+        .user-info {
+            overflow: hidden;
+            flex: 1;
+        }
+
+        .user-name {
+            font-size: 13px;
+            font-weight: 600;
+            color: #fff;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+
+        .user-role {
+            font-size: 11px;
+            color: rgba(255, 255, 255, 0.4);
+        }
+
+        .user-menu {
+            display: none;
+            position: absolute;
+            bottom: 100%;
+            left: 0;
+            right: 0;
+            background: #161b2e;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 12px;
+            padding: 8px;
+            margin-bottom: 8px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.5);
+            z-index: 50;
+        }
+
+        .user-menu.show {
+            display: block;
+        }
+
+        .user-menu a,
+        .user-menu button {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 9px 12px;
+            border-radius: 8px;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.65);
+            text-decoration: none;
+            background: none;
+            border: none;
+            cursor: pointer;
+            width: 100%;
+            font-family: 'Outfit', sans-serif;
+            transition: all 0.2s;
+        }
+
+        .user-menu a:hover,
+        .user-menu button:hover {
+            background: rgba(168, 85, 247, 0.1);
+            color: #fff;
+        }
+
+        .user-menu .logout-btn {
+            color: #f87171;
+        }
+
+        .user-menu .logout-btn:hover {
+            background: rgba(239, 68, 68, 0.1);
+            color: #ef4444;
+        }
+
+        .user-menu .divider {
+            height: 1px;
+            background: rgba(255, 255, 255, 0.06);
+            margin: 4px 0;
+        }
+
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            min-width: 0;
+            overflow: hidden;
+            margin-left: 260px;
+        }
+
+        .top-header {
+            height: 64px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 0 32px;
+            background: rgba(255, 255, 255, 0.02);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+            flex-shrink: 0;
+        }
+
+        .top-header h1 {
+            font-size: 20px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .page-body {
+            flex: 1;
+            overflow-y: auto;
+            padding: 32px;
+        }
+
+        /* Project Cards */
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+            gap: 20px;
+        }
+
+        .project-card {
+            background: #131829 !important;
+            border: 1px solid rgba(168, 85, 247, 0.12) !important;
+            border-radius: 16px;
+            padding: 24px;
+            transition: all 0.3s ease;
+            animation: fadeUp 0.5s ease both;
+            color: #e0e6f0 !important;
+        }
+
+        .project-card:hover, body.light-mode .project-card:hover {
+            background: #1e293b !important;
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3) !important;
+            border-color: rgba(168, 85, 247, 0.5) !important;
+        }
+
+        @keyframes fadeUp {
+            from {
+                opacity: 0;
+                transform: translateY(16px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .project-top {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 14px;
+        }
+
+        .badge {
+            display: inline-block;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 11px;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .badge-blue {
+            background: rgba(168, 85, 247, 0.15);
+            color: #a855f7;
+        }
+
+        .project-actions {
+            display: flex;
+            gap: 6px;
+        }
+
+        .action-btn {
+            background: none;
+            border: none;
+            cursor: pointer;
+            padding: 6px 8px;
+            border-radius: 8px;
+            transition: all 0.2s;
+            font-size: 14px;
+            color: rgba(255, 255, 255, 0.3);
+        }
+
+        .action-btn:hover {
+            background: rgba(255, 255, 255, 0.06);
+            color: #fff;
+        }
+
+        .project-name {
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+            margin-bottom: 10px;
+        }
+
+        .project-dates {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.4);
+            margin-bottom: 16px;
+        }
+
+        .project-dates i {
+            font-size: 12px;
+        }
+
+        .subprojects-section {
+            padding-top: 16px;
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .subprojects-label {
+            font-size: 10px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.3);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 10px;
+        }
+
+        .subproject-tag {
+            display: inline-block;
+            padding: 4px 10px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 6px;
+            font-size: 12px;
+            color: rgba(255, 255, 255, 0.6);
+            margin: 0 4px 4px 0;
+        }
+
+        /* Modal */
+        .modal-overlay {
+            position: fixed;
+            inset: 0;
+            background: rgba(0, 0, 0, 0.7);
+            backdrop-filter: blur(4px);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 100;
+            padding: 20px;
+        }
+
+        .modal-overlay.show {
+            display: flex;
+        }
+
+        .modal {
+            background: #131829;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            width: 100%;
+            max-width: 600px;
+            max-height: 90vh;
+            overflow-y: auto;
+            box-shadow: 0 24px 80px rgba(0, 0, 0, 0.6);
+            animation: modalIn 0.3s ease;
+        }
+
+        /* Scrollbar Modal */
+        .modal::-webkit-scrollbar {
+            width: 4px;
+        }
+
+        .modal::-webkit-scrollbar-thumb {
+            background: rgba(168, 85, 247, 0.2);
+            border-radius: 10px;
+        }
+
+        @keyframes modalIn {
+            from {
+                opacity: 0;
+                transform: scale(0.95) translateY(10px);
+            }
+
+            to {
+                opacity: 1;
+                transform: scale(1) translateY(0);
+            }
+        }
+
+        .modal-header {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 24px 28px;
+            border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+        }
+
+        .modal-header h3 {
+            font-size: 18px;
+            font-weight: 700;
+            color: #fff;
+        }
+
+        .modal-close {
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            width: 36px;
+            height: 36px;
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .modal-close:hover {
+            background: rgba(239, 68, 68, 0.1);
+            color: #f87171;
+        }
+
+        .modal-body {
+            padding: 28px;
+        }
+
+        .form-group {
+            margin-bottom: 18px;
+        }
+
+        .form-label {
+            display: block;
+            font-size: 12px;
+            font-weight: 600;
+            color: rgba(255, 255, 255, 0.5);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+
+        .form-input,
+        .form-select {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            color: #fff;
+            font-family: 'Outfit', sans-serif;
+            font-size: 14px;
+            transition: all 0.2s;
+            outline: none;
+        }
+
+        .form-input::placeholder {
+            color: rgba(255, 255, 255, 0.25);
+        }
+
+        .form-input:focus,
+        .form-select:focus {
+            border-color: #3399ff;
+            box-shadow: 0 0 0 3px rgba(51, 153, 255, 0.12);
+            background: rgba(51, 153, 255, 0.05);
+        }
+
+        .form-range {
+            flex: 1;
+            height: 6px;
+            -webkit-appearance: none;
+            appearance: none;
+            background: rgba(255, 255, 255, 0.1);
+            border-radius: 10px;
+            outline: none;
+            cursor: pointer;
+        }
+        .form-range::-webkit-slider-thumb {
+            -webkit-appearance: none;
+            appearance: none;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #a855f7;
+            border: 2px solid rgba(255,255,255,0.2);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .form-range::-webkit-slider-thumb:hover {
+            transform: scale(1.15);
+        }
+        .form-range::-moz-range-thumb {
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: #a855f7;
+            border: 2px solid rgba(255,255,255,0.2);
+            cursor: pointer;
+        }
+        .form-textarea {
+            width: 100%;
+            padding: 12px 16px;
+            background: rgba(255, 255, 255, 0.05);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            color: #fff;
+            font-family: 'Outfit', sans-serif;
+            font-size: 14px;
+            transition: all 0.2s;
+            outline: none;
+            resize: vertical;
+            min-height: 80px;
+        }
+
+        .checkbox-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 8px;
+            max-height: 150px;
+            overflow-y: auto;
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 10px;
+            padding: 10px;
+        }
+
+        .check-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 13px;
+            color: rgba(255, 255, 255, 0.6);
+            cursor: pointer;
+        }
+
+        .check-item input {
+            accent-color: #a855f7;
+        }
+
+        .form-select option {
+            background: #131829;
+            color: #fff;
+        }
+
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 14px;
+        }
+
+        .modal-actions {
+            display: flex;
+            gap: 12px;
+            justify-content: flex-end;
+            padding-top: 8px;
+        }
+
+
+        /* Sub-project items */
+        .subproject-form-item {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 8px;
+        }
+
+        .subproject-form-item input {
+            flex: 1;
+        }
+
+        .btn-add-sub {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            border: none;
+            background: rgba(51, 153, 255, 0.15);
+            color: #3399ff;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-add-sub:hover {
+            background: rgba(51, 153, 255, 0.25);
+        }
+
+        .btn-remove-sub {
+            width: 38px;
+            height: 38px;
+            border-radius: 10px;
+            border: none;
+            background: rgba(239, 68, 68, 0.1);
+            color: #f87171;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.2s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .btn-remove-sub:hover {
+            background: rgba(239, 68, 68, 0.2);
+        }
+
+        .section-divider {
+            border-top: 1px solid rgba(255, 255, 255, 0.06);
+            padding-top: 18px;
+            margin-top: 8px;
+        }
+
+        .section-title {
+            font-size: 12px;
+            font-weight: 700;
+            color: rgba(255, 255, 255, 0.4);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            margin-bottom: 14px;
+        }
+
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: rgba(255, 255, 255, 0.3);
+            grid-column: 1 / -1;
+        }
+
+        .empty-state i {
+            font-size: 48px;
+            margin-bottom: 12px;
+            opacity: 0.3;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar { display: none; }
+        }
+
+        /* ===== Premium List/Table View ===== */
+        #projects-table-view { background: #ffffff; border: 1px solid #e2e8f0; border-radius: 16px; overflow: hidden; padding: 16px 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.03); margin-top: 4px; }
+        .proj-table { width: 100%; border-collapse: separate; border-spacing: 0; text-align: left; }
+        .proj-table th { padding: 14px 20px; font-size: 11px; font-weight: 800; color: #a855f7 !important; text-transform: uppercase; letter-spacing: 1px; border-bottom: 1px solid #f1f5f9; background: transparent !important; }
+        .proj-table td { padding: 16px 20px; font-size: 13px; background: #fff; border-bottom: 1px solid #f1f5f9; vertical-align: middle; color: #334155; }
+        .proj-table tr:last-child td { border-bottom: none; }
+        .proj-table tr:hover td { background: #f8fafc; cursor: pointer; }
+
+        .pt-project-cell { display: flex; align-items: center; gap: 14px; }
+        .pt-project-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; background: rgba(168,85,247,0.08); color: #a855f7; border: 1px solid rgba(168,85,247,0.2); transition: transform 0.3s; }
+        .proj-table tr:hover .pt-project-icon { transform: rotate(10deg) scale(1.1); }
+        .pt-project-name { font-weight: 700; color: #1e293b; font-size: 14px; margin-bottom: 3px; }
+        .pt-project-client { font-size: 11px; color: #94a3b8; font-weight: 500; }
+
+        .pt-avatar-cell { display: flex; align-items: center; gap: 10px; }
+        .pt-avatar { width: 36px; height: 36px; border-radius: 50%; object-fit: cover; border: 2px solid #fff; box-shadow: 0 2px 6px rgba(0,0,0,0.08); flex-shrink: 0; }
+        .pt-manager-name { font-weight: 600; color: #1e293b; font-size: 13px; }
+
+        .pt-status-badge { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.5px; }
+        .pt-status-ongoing { background: rgba(168,85,247,0.1); color: #a855f7; }
+        .pt-status-done { background: rgba(16,185,129,0.1); color: #10b981; }
+        .pt-status-paused { background: rgba(245,158,11,0.12); color: #f59e0b; }
+        .pt-status-canceled { background: rgba(239,68,68,0.1); color: #ef4444; }
+
+        .pt-progress-wrap { display: flex; align-items: center; gap: 10px; min-width: 130px; }
+        .pt-progress-bar-bg { flex: 1; height: 6px; background: #f1f5f9; border-radius: 99px; overflow: hidden; }
+        .pt-progress-bar-fill { height: 100%; border-radius: 99px; background: linear-gradient(90deg, #a855f7, #c084fc); transition: width 0.6s ease; }
+        .pt-progress-pct { font-size: 11px; font-weight: 700; color: #a855f7; min-width: 32px; text-align: right; }
+
+        .pt-budget { font-weight: 700; color: #1e293b; font-size: 13px; }
+        .pt-budget-label { font-size: 11px; color: #94a3b8; }
+
+        .pt-actions { display: flex; gap: 8px; justify-content: flex-end; }
+        .pt-btn { width: 34px; height: 34px; border-radius: 8px; border: 1px solid #e2e8f0; background: #f8fafc; display: flex; align-items: center; justify-content: center; cursor: pointer; font-size: 13px; color: #64748b; transition: 0.2s; }
+        .pt-btn:hover { background: #e2e8f0; color: #1e293b; transform: scale(1.05); }
+        .pt-btn.edit:hover { background: rgba(168,85,247,0.1); color: #a855f7; border-color: rgba(168,85,247,0.3); }
+        .pt-btn.del:hover { background: rgba(239,68,68,0.08); color: #ef4444; border-color: rgba(239,68,68,0.3); }
+
+        /* Detail Modal */
+        .detail-modal { background: #131829; border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; width: 100%; max-width: 560px; max-height: 90vh; overflow-y: auto; box-shadow: 0 40px 100px rgba(0,0,0,0.8); }
+        .detail-row { display: flex; flex-direction: column; gap: 6px; padding: 14px 0; border-bottom: 1px solid rgba(255,255,255,0.05); }
+        .detail-row:last-child { border-bottom: none; }
+        .detail-label { font-size: 10px; font-weight: 700; color: rgba(255,255,255,0.3); text-transform: uppercase; letter-spacing: 0.5px; }
+        .detail-value { font-size: 14px; color: #fff; font-weight: 500; }
+        .detail-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0 24px; }
+    
+    
+    </style>
+</head>
+
+<body>
+    <aside class="sidebar" id="sidebar"></aside>
+
+    <main class="main-content">
+        <header class="top-header">
+            <div class="header-left" style="display:flex; align-items:center;">
+                <button class="mobile-burger" onclick="utils.toggleSidebar()"><i class="fas fa-bars"></i></button>
+                <div>
+                    <h1><i class="fas fa-project-diagram" style="color:#a855f7;margin-right:10px;"></i>Gestion des
+                        Projets</h1>
+                    <p style="font-size: 12px; color: rgba(255,255,255,0.4); margin-top: 2px;">"Planifiez, exécutez et
+                        suivez l'avancement de vos chantiers en un clin d'œil."</p>
+                </div>
+            </div>
+            <div style="display:flex; gap:16px; align-items:center;">
+                <div class="view-toggle">
+                    <button class="toggle-btn active" onclick="switchView('grid', this)"><i class="fas fa-th-large"></i>
+                        Blocs</button>
+                    <button class="toggle-btn" onclick="switchView('table', this)"><i class="fas fa-list"></i>
+                        Liste</button>
+                </div>
+                <button class="btn-primary btn-glow" onclick="openProjectModal()"><i class="fas fa-plus"></i> Nouveau
+                    Projet</button>
+            </div>
+        </header>
+
+        <div class="page-body">
+            <!-- Mini Stats Section -->
+            <div class="stats-grid">
+                <div class="stat-card-mini">
+                    <div class="stat-icon-mini blue-icon"><i class="fas fa-briefcase"></i></div>
+                    <div>
+                        <div class="stat-val-mini" id="stat-total-projects">0</div>
+                        <div class="stat-lab-mini">Total Projets</div>
+                    </div>
+                </div>
+                <div class="stat-card-mini">
+                    <div class="stat-icon-mini green-icon"><i class="fas fa-spinner"></i></div>
+                    <div>
+                        <div class="stat-val-mini" id="stat-ongoing-projects">0</div>
+                        <div class="stat-lab-mini">En cours</div>
+                    </div>
+                </div>
+                <div class="stat-card-mini">
+                    <div class="stat-icon-mini orange-icon"><i class="fas fa-wallet"></i></div>
+                    <div>
+                        <div class="stat-val-mini" id="stat-total-budget">0</div>
+                        <div class="stat-lab-mini">Budget global</div>
+                    </div>
+                </div>
+            </div>
+
+            <div id="projects-list" class="projects-grid">
+                <div class="empty-state"><i class="fas fa-project-diagram"></i>
+                    <p>Aucun projet trouvé</p>
+                </div>
+            </div>
+            <div id="projects-table-view" style="display:none;">
+                <table class="proj-table">
+                    <thead>
+                        <tr>
+                            <th style="color:#a855f7 !important;">Projet / Client</th>
+                            <th style="color:#a855f7 !important;">Responsable</th>
+                            <th style="color:#a855f7 !important;">Statut</th>
+                            <th style="color:#a855f7 !important;">Avancement</th>
+                            <th style="color:#a855f7 !important;">Budget Prévu</th>
+                            <th style="color:#a855f7 !important;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="projects-table-body"></tbody>
+                </table>
+            </div>
+
+            <div id="projects-grid-actions" style="text-align: center; margin-top: 24px; margin-bottom: 24px; display: none;">
+                <button id="btn-toggle-projects" class="btn-outline" onclick="toggleProjectsLimit()" style="border-radius:20px; padding: 10px 24px; font-size:14px; background: rgba(168, 85, 247, 0.05); color: #a855f7; border-color: rgba(168, 85, 247, 0.2);"></button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Project Modal -->
+    <div class="modal-overlay" id="projectModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3>Nouveau Projet</h3>
+                <button class="modal-close" onclick="closeProjectModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="projectForm">
+                    <div class="form-group">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Client</label>
+                                <select id="client_id" class="form-select" required>
+                                    <option value="">Sélectionner</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Catégorie</label>
+                                <select id="project_category" class="form-select">
+                                    <option value="Électricité">Électricité</option>
+                                    <option value="Télécom">Télécom</option>
+                                    <option value="Maintenance">Maintenance</option>
+                                    <option value="Autre">Autre</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Nom du projet principal</label>
+                                <input type="text" id="project_name" class="form-input"
+                                    placeholder="Ex: Résidence Plateau" required>
+                            </div>
+                            <div class="form-group">
+                                <label class="form-label">Chef de projet</label>
+                                <select id="project_manager" class="form-select"></select>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Description du projet</label>
+                        <textarea id="project_description" class="form-textarea"
+                            placeholder="Détails des travaux à effectuer..."></textarea>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Date de début</label>
+                            <input type="date" id="start_date" class="form-input" required>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Date de fin</label>
+                            <input type="date" id="end_date" class="form-input" required>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Budget Prévu (XAF)</label>
+                            <input type="number" id="project_budget" class="form-input" placeholder="0">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Priorité</label>
+                            <select id="project_priority" class="form-select">
+                                <option value="Basse">Basse</option>
+                                <option value="Moyenne" selected>Moyenne</option>
+                                <option value="Haute">Haute</option>
+                                <option value="Urgente">Urgente</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Avancement / Progrès (%)</label>
+                            <div style="display:flex; align-items:center; gap:12px;">
+                                <input type="range" id="project_progress" class="form-range" min="0" max="100" value="0" oninput="document.getElementById('progress_value_display').textContent = this.value + '%'">
+                                <span id="progress_value_display" style="font-size:16px; font-weight:700; color:#a855f7; min-width:48px; text-align:right;">0%</span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Statut Initial</label>
+                        <select id="project_status" class="form-select">
+                            <option value="À l'étude">À l'étude</option>
+                            <option value="En cours" selected>En cours</option>
+                            <option value="En pause">En pause</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Assigner des employés</label>
+                        <div id="employees-grid" class="checkbox-grid"></div>
+                    </div>
+
+                    <div class="section-divider">
+                        <div class="section-title">Sous-projets</div>
+                        <div id="subprojects-container">
+                            <div class="subproject-form-item">
+                                <input type="text" name="subproject_name[]" class="form-input"
+                                    placeholder="Ex: Étage 1">
+                                <button type="button" class="btn-add-sub" onclick="addSubproject()"><i
+                                        class="fas fa-plus"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="modal-actions">
+                        <button type="button" class="btn-outline" onclick="closeProjectModal()">Annuler</button>
+                        <button type="submit" class="btn-primary">Enregistrer le Projet</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <!-- Project Detail Modal -->
+    <div class="modal-overlay" id="projectDetailModal">
+        <div class="detail-modal">
+            <div class="modal-header">
+                <h3 style="color:#fff;">Détail Projet</h3>
+                <button class="modal-close" onclick="document.getElementById('projectDetailModal').classList.remove('show')"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <div class="detail-grid">
+                    <div class="detail-row"><span class="detail-label">Nom du Projet</span><span class="detail-value" id="dp_name"></span></div>
+                    <div class="detail-row"><span class="detail-label">Client</span><span class="detail-value" id="dp_client"></span></div>
+                    <div class="detail-row"><span class="detail-label">Catégorie</span><span class="detail-value" id="dp_category"></span></div>
+                    <div class="detail-row"><span class="detail-label">Chef de Projet</span><span class="detail-value" id="dp_manager"></span></div>
+                    <div class="detail-row"><span class="detail-label">Date de Début</span><span class="detail-value" id="dp_start"></span></div>
+                    <div class="detail-row"><span class="detail-label">Date de Fin</span><span class="detail-value" id="dp_end"></span></div>
+                    <div class="detail-row"><span class="detail-label">Budget (XAF)</span><span class="detail-value" id="dp_budget"></span></div>
+                    <div class="detail-row"><span class="detail-label">Statut</span><span class="detail-value" id="dp_status"></span></div>
+                    <div class="detail-row"><span class="detail-label">Priorité</span><span class="detail-value" id="dp_priority"></span></div>
+                    <div class="detail-row"><span class="detail-label">Avancement</span><span class="detail-value" id="dp_progress"></span></div>
+                </div>
+                <div class="detail-row"><span class="detail-label">Description</span><span class="detail-value" id="dp_description"></span></div>
+                <div class="detail-row"><span class="detail-label">Sous-projets</span><span class="detail-value" id="dp_subprojects"></span></div>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/assets/js/notify.js"></script>
+    <script src="/assets/js/api.js"></script>
+    <script src="/pages/utils.js"></script>
+    <script>
+        
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            await utils.checkAuth();
+            utils.loadSidebar('projets.html', '#a855f7');
+            loadInitialData();
+            loadProjects();
+        });
+
+        async function viewProject(id) {
+            try {
+                    const projects = await api.get('/projects');
+                    const p = projects.find(x => x.id == id);
+                    if (p) {
+                        document.getElementById('dp_name').textContent = p.name || '-';
+                        document.getElementById('dp_client').textContent = p.client_name || '-';
+                        document.getElementById('dp_category').textContent = p.category || '-';
+                        document.getElementById('dp_manager').textContent = p.manager || '-';
+                        document.getElementById('dp_start').textContent = p.start_date ? new Date(p.start_date).toLocaleDateString('fr-FR') : '-';
+                        document.getElementById('dp_end').textContent = p.end_date ? new Date(p.end_date).toLocaleDateString('fr-FR') : '-';
+                        document.getElementById('dp_budget').textContent = p.budget ? parseFloat(p.budget).toLocaleString('fr-FR') + ' XAF' : '-';
+                        document.getElementById('dp_status').textContent = p.status || '-';
+                        document.getElementById('dp_priority').textContent = p.priority || '-';
+                        document.getElementById('dp_progress').textContent = (p.progress || 0) + '%';
+                        document.getElementById('dp_description').textContent = p.description || '-';
+                        document.getElementById('dp_subprojects').textContent = p.subprojects && p.subprojects.length > 0 ? p.subprojects.map(sp => sp.name).join(', ') : '-';
+                        document.getElementById('projectDetailModal').classList.add('show');
+                    }
+                } catch(e) { console.error(e); }
+        }
+
+        let currentEditingId = null;
+        function openProjectModal(id = null) {
+            currentEditingId = id;
+            const title = document.querySelector('#projectModal h3');
+            const submitBtn = document.querySelector('#projectModal .btn-primary');
+
+            if (id) {
+                title.textContent = 'Modifier le Projet';
+                submitBtn.textContent = 'METTRE À JOUR LE PROJET';
+                loadProjectData(id);
+            } else {
+                title.textContent = 'Nouveau Projet';
+                submitBtn.textContent = 'ENREGISTRER LE PROJET';
+                document.getElementById('projectForm').reset();
+                document.getElementById('subprojects-container').innerHTML = `
+                    <div class="subproject-form-item">
+                        <input type="text" name="subproject_name[]" class="form-input" placeholder="Ex: Étage 1">
+                        <button type="button" class="btn-add-sub" onclick="addSubproject()"><i class="fas fa-plus"></i></button>
+                    </div>
+                `;
+            }
+            document.getElementById('projectModal').classList.add('show');
+        }
+
+        async function loadProjectData(id) {
+            try {
+                const projects = await api.get('/projects');
+                const p = projects.find(x => x.id == id);
+                if (p) {
+                    document.getElementById('client_id').value = p.client_id || '';
+                    document.getElementById('project_name').value = p.name || '';
+                    document.getElementById('project_description').value = p.description || '';
+                    document.getElementById('project_category').value = p.category || 'Électricité';
+                    document.getElementById('project_manager').value = p.manager || '';
+                    document.getElementById('start_date').value = p.start_date ? p.start_date.substring(0, 10) : '';
+                    document.getElementById('end_date').value = p.end_date ? p.end_date.substring(0, 10) : '';
+                    document.getElementById('project_budget').value = p.budget || 0;
+                    document.getElementById('project_priority').value = p.priority || 'Moyenne';
+                    document.getElementById('project_progress').value = p.progress || 0;
+                    document.getElementById('progress_value_display').textContent = (p.progress || 0) + '%';
+                    document.getElementById('project_status').value = p.status || 'En cours';
+
+                    // Clear and set assignees
+                    document.querySelectorAll('input[name="assignees[]"]').forEach(i => i.checked = false);
+                    if (p.assignees) {
+                        p.assignees.forEach(aid => {
+                            const cb = document.querySelector(`input[name="assignees[]"][value="${aid}"]`);
+                            if (cb) cb.checked = true;
+                        });
+                    }
+
+                    // Clear and set subprojects
+                    const container = document.getElementById('subprojects-container');
+                    container.innerHTML = '';
+                    if (p.subprojects && p.subprojects.length > 0) {
+                        p.subprojects.forEach((sp, idx) => {
+                            const div = document.createElement('div');
+                            div.className = 'subproject-form-item';
+                            div.innerHTML = `
+                                <input type="text" name="subproject_name[]" class="form-input" value="${sp.name}" placeholder="Nom du sous-projet">
+                                ${idx === 0 ? '<button type="button" class="btn-add-sub" onclick="addSubproject()"><i class="fas fa-plus"></i></button>' : '<button type="button" class="btn-remove-sub" onclick="this.parentElement.remove()"><i class="fas fa-trash"></i></button>'}
+                            `;
+                            container.appendChild(div);
+                        });
+                    } else {
+                        container.innerHTML = `
+                            <div class="subproject-form-item">
+                                <input type="text" name="subproject_name[]" class="form-input" placeholder="Ex: Étage 1">
+                                <button type="button" class="btn-add-sub" onclick="addSubproject()"><i class="fas fa-plus"></i></button>
+                            </div>
+                        `;
+                    }
+                }
+            } catch (e) { console.error(e); }
+        }
+
+        async function deleteProject(id) {
+            if (!await notify.confirm('Voulez-vous vraiment supprimer ce projet ?')) return;
+            try {
+                await api.delete('/projects/' + id);
+                loadProjects();
+            } catch (e) { notify.error("Erreur lors de la suppression"); }
+        }
+
+        function closeProjectModal() {
+            document.getElementById('projectModal').classList.remove('show');
+            currentEditingId = null;
+        }
+
+        function addSubproject() {
+            const container = document.getElementById('subprojects-container');
+            const item = document.createElement('div');
+            item.className = 'subproject-form-item';
+            item.innerHTML = `<input type="text" name="subproject_name[]" class="form-input" placeholder="Nom du sous-projet"><button type="button" class="btn-remove-sub" onclick="this.parentElement.remove()"><i class="fas fa-trash"></i></button>`;
+            container.appendChild(item);
+        }
+
+        async function loadInitialData() {
+            try {
+                const [clients, employees] = await Promise.all([
+                    api.get('/clients'),
+                    api.get('/employees')
+                ]);
+
+                const clientSelect = document.getElementById('client_id');
+                clients.forEach(c => { clientSelect.innerHTML += `<option value="${c.id}">${c.name}</option>`; });
+
+                const managerSelect = document.getElementById('project_manager');
+                const empGrid = document.getElementById('employees-grid');
+                employees.forEach(e => {
+                    managerSelect.innerHTML += `<option value="${e.name}">${e.name}</option>`;
+                    empGrid.innerHTML += `<label class="check-item"><input type="checkbox" name="assignees[]" value="${e.id}"> <span>${e.name}</span></label>`;
+                });
+            } catch (e) { console.error(e); }
+        }
+
+        function switchView(view, btn) {
+            document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('projects-list').style.display = view === 'grid' ? 'grid' : 'none';
+            document.getElementById('projects-table-view').style.display = view === 'table' ? 'block' : 'none';
+        }
+
+        document.getElementById('projectForm').addEventListener('submit', async (e) => {
+            e.preventDefault();
+            const formData = {
+                client_id: document.getElementById('client_id').value,
+                name: document.getElementById('project_name').value,
+                description: document.getElementById('project_description').value,
+                category: document.getElementById('project_category').value,
+                manager: document.getElementById('project_manager').value,
+                start_date: document.getElementById('start_date').value,
+                end_date: document.getElementById('end_date').value,
+                budget: document.getElementById('project_budget').value,
+                priority: document.getElementById('project_priority').value,
+                status: document.getElementById('project_status').value,
+                assignees: Array.from(document.querySelectorAll('input[name="assignees[]"]:checked')).map(i => i.value),
+                subprojects: Array.from(document.getElementsByName('subproject_name[]')).map(i => i.value).filter(v => v.trim()),
+                progress: parseInt(document.getElementById('project_progress').value) || 0
+            };
+            try {
+                if (currentEditingId) {
+                    await api.put('/projects/' + currentEditingId, formData);
+                } else {
+                    await api.post('/projects', formData);
+                }
+                closeProjectModal();
+                loadProjects();
+                e.target.reset();
+            } catch (err) { notify.error(err.message); }
+        });
+
+        let allProjects = [];
+        let projectsGridLimit = 10;
+
+        function toggleProjectsLimit() {
+            if (projectsGridLimit === 10) {
+                projectsGridLimit = allProjects.length;
+            } else {
+                projectsGridLimit = 10;
+            }
+            renderProjectsDisplay();
+        }
+
+        function renderProjectsDisplay() {
+            const grid = document.getElementById('projects-list');
+            const tableBody = document.getElementById('projects-table-body');
+            const btnContainer = document.getElementById('projects-grid-actions');
+            const btnToggle = document.getElementById('btn-toggle-projects');
+
+            if (!allProjects || allProjects.length === 0) {
+                grid.innerHTML = '<div class="empty-state"><i class="fas fa-project-diagram"></i><p>Aucun projet trouvé</p></div>';
+                tableBody.innerHTML = '';
+                btnContainer.style.display = 'none';
+                return;
+            }
+
+            const toShow = allProjects.slice(0, projectsGridLimit);
+
+            // Render Grid
+            grid.innerHTML = toShow.map((p, i) => `
+                <div class="project-card" style="animation-delay:${i * 0.05}s">
+                    <div class="project-top">
+                        <div>
+                            <span class="badge badge-blue">${p.category || 'Électricité'}</span>
+                            <span style="font-size:10px; color:rgba(255,255,255,0.3); margin-left:8px;">#${p.id}</span>
+                        </div>
+                        <div class="project-actions">
+                            <button class="action-btn" onclick="viewProject(${p.id})" title="Voir" style="color:#a855f7;"><i class="fas fa-eye"></i></button>
+                            <button class="btn-icon btn-edit" onclick="openProjectModal(${p.id})" title="Modifier"><i class="fas fa-edit"></i></button>
+                            <button class="btn-icon btn-delete" onclick="deleteProject(${p.id})" title="Supprimer"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </div>
+                    <div class="project-name">${p.name}</div>
+                    <div class="project-dates">
+                        <span><i class="far fa-calendar-alt"></i> ${new Date(p.start_date).toLocaleDateString('fr-FR')}</span>
+                        <span><i class="fas fa-arrow-right"></i> ${new Date(p.end_date).toLocaleDateString('fr-FR')}</span>
+                    </div>
+                    <div style="font-size:12px; color:rgba(255,255,255,0.5); margin-bottom:12px;">Client: <strong style="color:#fff;">${p.client_name}</strong></div>
+                    <div style="font-size:12px; color:rgba(255,255,255,0.6); margin-bottom:12px; max-height: 60px; overflow: hidden; text-overflow: ellipsis;">${p.description || 'Aucune description'}</div>
+                    
+                    <div class="progress-info" style="display:flex; justify-content:space-between; font-size:11px; color:rgba(255,255,255,0.4);">
+                        <span>Avancement</span>
+                        <span>${p.progress || 0}%</span>
+                    </div>
+                    <div class="progress-container">
+                        <div class="progress-bar" style="width:${p.progress || 0}%; background:#a855f7;"></div>
+                    </div>
+
+                    <div class="subprojects-section">
+                        <div class="subprojects-label">Sous-projets (${(p.subprojects || []).length})</div>
+                        <div>${(p.subprojects || []).map(sp => `<span class="subproject-tag">${sp.name}</span>`).join('')}</div>
+                    </div>
+
+                    <div class="project-links">
+                        <a href="/devis?project=${p.id}" class="link-icon" title="Devis"><i class="fas fa-file-invoice"></i></a>
+                        <a href="/factures?project=${p.id}" class="link-icon" title="Factures"><i class="fas fa-file-invoice-dollar"></i></a>
+                        <a href="/caisse?project=${p.id}" class="link-icon" title="Caisse"><i class="fas fa-cash-register"></i></a>
+                        <a href="/fiche-fin-travaux?project=${p.id}" class="link-icon" title="Fiche Fin"><i class="fas fa-clipboard-check"></i></a>
+                    </div>
+                </div>
+            `).join('');
+
+            // Render Table (premium design)
+            tableBody.innerHTML = toShow.map(p => {
+                const progress = p.progress || 0;
+                const budget = (parseFloat(p.budget) || 0).toLocaleString('fr-FR');
+                
+                // Status badge
+                let statusClass = 'pt-status-ongoing', statusIcon = 'spinner', statusLabel = p.status || 'En cours';
+                if ((p.status || '').toLowerCase().includes('termin')) { statusClass = 'pt-status-done'; statusIcon = 'check-circle'; }
+                else if ((p.status || '').toLowerCase().includes('pause') || (p.status || '').toLowerCase().includes('suspen')) { statusClass = 'pt-status-paused'; statusIcon = 'pause-circle'; }
+                else if ((p.status || '').toLowerCase().includes('annul')) { statusClass = 'pt-status-canceled'; statusIcon = 'times-circle'; }
+
+                // Manager avatar (initials, purple background)
+                const managerName = p.manager || 'N/A';
+                const avatarUrl = `https://ui-avatars.com/api/?name=${encodeURIComponent(managerName)}&background=a855f7&color=fff&rounded=true&bold=true`;
+
+                return `
+                <tr>
+                    <td>
+                        <div class="pt-project-cell">
+                            <div class="pt-project-icon"><i class="fas fa-folder"></i></div>
+                            <div>
+                                <div class="pt-project-name">${p.name}</div>
+                                <div class="pt-project-client"><i class="fas fa-user" style="margin-right:4px;"></i>${p.client_name || '-'}</div>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="pt-avatar-cell">
+                            <img src="${avatarUrl}" class="pt-avatar" alt="${managerName}">
+                            <span class="pt-manager-name">${managerName}</span>
+                        </div>
+                    </td>
+                    <td>
+                        <span class="pt-status-badge ${statusClass}"><i class="fas fa-${statusIcon}"></i> ${statusLabel}</span>
+                    </td>
+                    <td>
+                        <div class="pt-progress-wrap">
+                            <div class="pt-progress-bar-bg"><div class="pt-progress-bar-fill" style="width:${progress}%;"></div></div>
+                            <span class="pt-progress-pct">${progress}%</span>
+                        </div>
+                    </td>
+                    <td>
+                        <div class="pt-budget">${budget} <span style="font-size:10px;color:#94a3b8;">XAF</span></div>
+                    </td>
+                    <td>
+                        <div class="pt-actions">
+                            <button class="pt-btn" onclick="viewProject(${p.id})" title="Voir" style="color:#a855f7;"><i class="fas fa-eye"></i></button>
+                            <button class="pt-btn edit" onclick="openProjectModal(${p.id})" title="Modifier"><i class="fas fa-edit"></i></button>
+                            <button class="pt-btn del" onclick="deleteProject(${p.id})" title="Supprimer"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </td>
+                </tr>`;
+            }).join('');
+
+            if (allProjects.length > 10) {
+                btnContainer.style.display = 'block';
+                if (projectsGridLimit === 10) {
+                    btnToggle.innerHTML = `Voir plus (${allProjects.length - 10} restants) <i class="fas fa-chevron-down" style="margin-left: 6px;"></i>`;
+                } else {
+                    btnToggle.innerHTML = `Voir moins <i class="fas fa-chevron-up" style="margin-left: 6px;"></i>`;
+                }
+            } else {
+                btnContainer.style.display = 'none';
+            }
+        }
+
+        async function loadProjects() {
+            try {
+                // Prevent browser caching of GET requests to ensure fluid deletion updates
+                const projects = await api.get('/projects?_=' + Date.now());
+                allProjects = projects;
+
+                // Update Stats
+                document.getElementById('stat-total-projects').textContent = projects.length;
+                document.getElementById('stat-ongoing-projects').textContent = projects.filter(p => p.status !== 'Terminé').length;
+                const totalBudget = projects.reduce((acc, p) => acc + (parseFloat(p.budget) || 0), 0);
+                document.getElementById('stat-total-budget').textContent = totalBudget.toLocaleString() + ' XAF';
+
+                renderProjectsDisplay();
+            } catch (error) { console.error(error); }
+        }
+       
+
+    </script>
+</body>
+
+</html>

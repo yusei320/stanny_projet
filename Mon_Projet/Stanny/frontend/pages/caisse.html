@@ -1,0 +1,460 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Caisse - STATCOM SERVICES</title>
+    <link rel="icon" type="image/jpeg" href="/assets/img/logo.png">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+   
+    <style>
+
+        :root { --color-module: #10b981; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Outfit', sans-serif; background: #0a0e1a; color: #e0e6f0; min-height: 100vh; display: flex; overflow: hidden; }
+
+        .main-content { flex: 1; display: flex; flex-direction: column; min-width: 0; overflow: hidden; margin-left: 260px; }
+        .top-header { height: 72px; display: flex; align-items: center; justify-content: space-between; padding: 0 32px; background: rgba(255,255,255,0.02); border-bottom: 1px solid rgba(255,255,255,0.06); flex-shrink: 0; }
+        .header-left h1 { font-size: 20px; font-weight: 700; color: #fff; line-height: 1.2; display: flex; align-items: center; gap: 10px; }
+        .header-left h1 i { color: #22c55e; }
+        .header-left p { font-size: 11px; color: rgba(255,255,255,0.4); font-weight: 500; margin-top: 2px; }
+        .header-right { display: flex; align-items: center; gap: 20px; }
+
+
+
+        .page-body { flex: 1; overflow-y: auto; padding: 32px; }
+
+        /* Stats Mini */
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 20px; margin-bottom: 32px; }
+        .stat-card-mini { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 16px; padding: 20px; display: flex; align-items: center; gap: 12px; }
+        .stat-icon-mini { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+        .stat-val-mini { font-size: 18px; font-weight: 800; color: #fff; }
+        .stat-lab-mini { font-size: 10px; color: rgba(255,255,255,0.4); text-transform: uppercase; }
+
+        /* View Toggle */
+        .view-controls { display: flex; align-items: center; }
+        .toggle-btns { display: flex; background: rgba(255,255,255,0.04); padding: 3px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05); }
+        .toggle-btn { padding: 6px 12px; border-radius: 7px; border: none; background: none; color: rgba(255,255,255,0.3); cursor: pointer; font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 6px; transition: 0.2s; }
+        .toggle-btn.active { background: rgba(34, 197, 94, 0.1); color: #22c55e; }
+
+        /* Grid View (Cards) */
+        .cash-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 20px; }
+        .cash-card { background: #0f172a !important; border: 1px solid rgba(255,255,255,0.06) !important; border-radius: 20px; padding: 24px; transition: 0.3s; cursor: pointer; animation: fadeUp 0.5s ease both; }
+        .cash-card:hover { background: #1e293b !important; border-color: rgba(34, 197, 94, 0.5) !important; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3) !important; }
+        .cash-card-header { display: flex; justify-content: space-between; margin-bottom: 20px; }
+        .c-amount { font-size: 20px; font-weight: 800; }
+        .c-type { font-size: 10px; font-weight: 800; padding: 4px 12px; border-radius: 20px; text-transform: uppercase; }
+        .c-motif { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 12px; }
+        .c-meta { font-size: 12px; color: rgba(255,255,255,0.4); display: flex; flex-direction: column; gap: 8px; }
+        .c-meta item { display: flex; align-items: center; gap: 8px; }
+        .c-actions { margin-top: 20px; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.06); display: flex; gap: 10px; }
+        @keyframes fadeUp { from { opacity: 0; transform: translateY(16px); } to { opacity: 1; transform: translateY(0); } }
+
+        /* Force dark theme on cash cards even in light mode to beat utils.js */
+        body.light-mode #cash-grid .cash-card { background: #0f172a !important; border: 1px solid rgba(255,255,255,0.06) !important; box-shadow: none !important; }
+        body.light-mode #cash-grid .cash-card .c-motif { color: #fff !important; }
+        body.light-mode #cash-grid .cash-card .c-meta { color: rgba(255,255,255,0.4) !important; }
+        body.light-mode #cash-grid .cash-card:hover { background: #1e293b !important; border-color: rgba(34, 197, 94, 0.5) !important; box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3) !important; }
+
+        /* ─── Premium Data Table View ────────────────────────────────── */
+        .data-card { background: #ffffff !important; border: 1px solid #e2e8f0 !important; border-radius: 16px; overflow: hidden; padding: 16px 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.03) !important; margin-top: 24px; margin-bottom: 24px; display: none; }
+        .premium-table { width: 100%; border-collapse: separate; border-spacing: 0; text-align: left; }
+        .premium-table th { padding: 16px 20px; font-size: 11px; font-weight: 800; color: var(--color-module) !important; text-transform: uppercase; letter-spacing: 1px; border-bottom: none !important; background: transparent !important; }
+        .premium-table td { padding: 16px 20px; font-size: 13px; background: #fff; border-bottom: 1px solid #f1f5f9 !important; vertical-align: middle; transition: 0.2s; color: #334155; }
+        .premium-table tr { transition: all 0.3s ease; }
+        .premium-table tr:hover td { background: #f8fafc; cursor: pointer; }
+        
+        .action-cell { display: flex; align-items: center; gap: 16px; }
+        .action-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; background: rgba(16, 185, 129, 0.08); color: var(--color-module); transition: transform 0.3s; border: 1px solid rgba(16, 185, 129, 0.15); }
+        .premium-table tr:hover .action-icon { transform: rotate(10deg) scale(1.1); }
+        .action-texts { display: flex; flex-direction: column; }
+        .action-title { font-weight: 700; color: #1e293b; font-size: 13px; margin-bottom: 3px; letter-spacing: 0.3px; }
+        .action-sub { font-size: 11px; color: #94a3b8; font-weight: 500; }
+        
+        .type-badge { padding: 6px 12px; border-radius: 6px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; border: none; }
+        .btn-details { width: 36px; height: 36px; border-radius: 8px; background: #f8fafc; border: 1px solid #e2e8f0; color: #64748b; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; font-size: 14px; }
+        .btn-details:hover { background: #e2e8f0; color: #1e293b; transform: scale(1.05); }
+        .btn-details.delete { color: #ef4444; }
+        .btn-details.delete:hover { background: #fef2f2; border-color: #fca5a5; }
+
+        .col-date { font-weight: 600; color: #1e293b; white-space: nowrap; font-variant-numeric: tabular-nums; }
+        .col-date .time { font-size: 11px; color: #94a3b8; font-weight: 500; display: block; margin-left: 0; margin-top: 4px; }
+
+        .text-green { color: #4ade80; }
+        .bg-green { background: rgba(34,197,94,0.1); color: #4ade80; }
+        .text-red { color: #f87171; }
+        .bg-red { background: rgba(239,68,68,0.1); color: #f87171; }
+
+
+
+        /* Modal Styles Placeholder ... same as before */
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(10px); display: none; align-items: center; justify-content: center; z-index: 100; padding: 20px; }
+        .modal-overlay.show { display: flex; }
+        .modal { background: #131829; border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; width: 100%; max-width: 800px; max-height: 90vh; overflow-y: auto; }
+        .modal-header { padding: 24px 32px; border-bottom: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-between; align-items: center; }
+        .modal-body { padding: 32px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+        .form-group { margin-bottom: 20px; }
+        .form-label { display: block; font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.4); text-transform: uppercase; margin-bottom: 8px; }
+        .form-input, .form-select, .form-textarea { width: 100%; padding: 12px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; color: #fff; font-family: 'Outfit'; outline: none; }
+    </style>
+</head>
+<body>
+    <aside class="sidebar" id="sidebar"></aside>
+
+    <main class="main-content">
+        <header class="top-header">
+            <div class="header-left">
+                <button class="mobile-burger" onclick="utils.toggleSidebar()"><i class="fas fa-bars"></i></button>
+                <h1><i class="fas fa-cash-register"></i>Gestion de la Caisse</h1>
+                <p>"La transparence financière à chaque transaction."</p>
+            </div>
+            <div class="header-right">
+                <div class="view-controls">
+                    <div class="toggle-btns">
+                        <button class="toggle-btn active" onclick="switchView('grid', this)"><i class="fas fa-th"></i> Blocs</button>
+                        <button class="toggle-btn" onclick="switchView('table', this)"><i class="fas fa-list"></i> Liste</button>
+                    </div>
+                </div>
+                <div style="display:flex; gap:12px;">
+                    <button class="btn-primary" style="background:#22c55e; box-shadow: 0 4px 15px rgba(34,197,94,0.3);" onclick="openModal('entrée')"><i class="fas fa-plus"></i> ENTRÉE</button>
+                    <button class="btn-primary" style="background:#ef4444; box-shadow: 0 4px 15px rgba(239,68,68,0.3);" onclick="openModal('sortie')"><i class="fas fa-minus"></i> SORTIE</button>
+                </div>
+            </div>
+        </header>
+
+        <div class="page-body">
+            <div class="stats-grid">
+                <div class="stat-card-mini">
+                    <div class="stat-icon-mini" style="background:rgba(34,197,94,0.1); color:#22c55e;"><i class="fas fa-arrow-down"></i></div>
+                    <div><div class="stat-val-mini" id="stat-total-in">0 XAF</div><div class="stat-lab-mini">Total Entrées</div></div>
+                </div>
+                <div class="stat-card-mini">
+                    <div class="stat-icon-mini" style="background:rgba(239,68,68,0.1); color:#ef4444;"><i class="fas fa-arrow-up"></i></div>
+                    <div><div class="stat-val-mini" id="stat-total-out">0 XAF</div><div class="stat-lab-mini">Total Sorties</div></div>
+                </div>
+                <div class="stat-card-mini" style="background:rgba(51,153,255,0.05); border-color:rgba(51,153,255,0.2);">
+                    <div class="stat-icon-mini" style="background:rgba(51,153,255,0.1); color:#3399ff;"><i class="fas fa-wallet"></i></div>
+                    <div><div class="stat-val-mini" id="stat-balance" style="color:#3399ff;">0 XAF</div><div class="stat-lab-mini">Solde Actuel</div></div>
+                </div>
+            </div>
+
+            <div id="cash-grid" class="cash-grid">
+                <!-- Cards -->
+            </div>
+
+            <div id="cash-table-container" class="data-card">
+                <table class="premium-table">
+                    <thead>
+                        <tr>
+                            <th style="color:#22c55e !important;">Date & Heure</th>
+                            <th style="color:#22c55e !important;">Motif / Libellé</th>
+                            <th style="color:#22c55e !important;">Type</th>
+                            <th style="color:#22c55e !important;">Montant</th>
+                            <th style="color:#22c55e !important;">Bénéficiaire/Projet</th>
+                            <th style="color:#22c55e !important; text-align:right;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="cash-list">
+                        <!-- Rows -->
+                    </tbody>
+                </table>
+            </div>
+
+            <div id="caisse-grid-actions" style="text-align: center; margin-top: 24px; margin-bottom: 24px; display: none;">
+                <button id="btn-toggle-caisse" class="btn-outline" onclick="toggleCaisseLimit()" style="border-radius:20px; padding: 10px 24px; font-size:14px; background: rgba(34, 197, 94, 0.05); color: #22c55e; border-color: rgba(34, 197, 94, 0.2);"></button>
+            </div>
+        </div>
+    </main>
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="cashModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 id="modal-title">Nouvelle Transaction</h3>
+                <button class="btn-icon" onclick="closeModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="cashForm">
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Type</label>
+                            <select id="t_type" class="form-select" disabled>
+                                <option value="entrée">Entrée (Encaissement)</option>
+                                <option value="sortie">Sortie (Décharge)</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Montant (XAF)</label>
+                            <input type="number" id="t_amount" class="form-input" placeholder="0" required>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label class="form-label">Motif / Libellé</label>
+                        <input type="text" id="t_motif" class="form-input" placeholder="Ex: Avancement travaux..." required>
+                    </div>
+                    <div class="form-row">
+                        <div class="form-group">
+                            <label class="form-label">Client / Bénéficiaire</label>
+                            <input type="text" id="t_beneficiary" class="form-input" placeholder="Nom de la personne">
+                        </div>
+                        <div class="form-group">
+                            <label class="form-label">Projet associé</label>
+                            <select id="t_project" class="form-select">
+                                <option value="">Aucun projet</option>
+                            </select>
+                        </div>
+                    </div>
+                    <input type="hidden" id="t_date" name="date">
+                    <div style="display:flex; justify-content:flex-end; gap:12px; margin-top:10px;">
+                        <button type="button" class="btn-outline" onclick="closeModal()">ANNULER</button>
+                        <button type="submit" class="btn-primary" id="btn-save-cash">ENREGISTRER</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    
+
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/assets/js/notify.js"></script>
+    <script src="/assets/js/api.js"></script>
+    <script src="/pages/utils.js"></script>
+    <script>
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (!utils.checkAuth()) return;
+            utils.loadSidebar('caisse.html', '#10b981');
+            loadTransactions();
+            loadProjects();
+        });
+
+        let currentEditingId = null;
+        let allTransactions = [];
+        let caisseGridLimit = 10;
+
+        function toggleCaisseLimit() {
+            if (caisseGridLimit === 10) {
+                caisseGridLimit = allTransactions.length;
+            } else {
+                caisseGridLimit = 10;
+            }
+            renderCaisseDisplay();
+        }
+
+        async function loadProjects() {
+            try {
+                const projects = await api.get('/projects');
+                const sel = document.getElementById('t_project');
+                projects.forEach(p => {
+                    sel.innerHTML += `<option value="${p.id}">${p.name}</option>`;
+                });
+            } catch(e) { console.error(e); }
+        }
+
+        function openModal(type, id = null) {
+            currentEditingId = id;
+            const typeSel = document.getElementById('t_type');
+            const btnSave = document.getElementById('btn-save-cash');
+            const modalTitle = document.getElementById('modal-title');
+            
+            typeSel.value = type;
+            modalTitle.textContent = (id ? 'Modifier la ' : 'Nouvelle ') + (type === 'entrée' ? 'Entrée' : 'Sortie');
+            
+            // Dynamic button color
+            if (type === 'sortie') {
+                btnSave.style.background = '#ef4444';
+                btnSave.style.boxShadow = '0 4px 15px rgba(239,68,68,0.3)';
+            } else {
+                btnSave.style.background = '#22c55e';
+                btnSave.style.boxShadow = '0 4px 15px rgba(34,197,94,0.3)';
+            }
+
+            if (id) {
+                loadTransactionData(id);
+            } else {
+                document.getElementById('cashForm').reset();
+                typeSel.value = type;
+            }
+            
+            document.getElementById('cashModal').classList.add('show');
+        }
+
+        async function loadTransactionData(id) {
+            try {
+                const transactions = await api.get('/cash?_=' + Date.now());
+                const t = transactions.find(x => x.id == id);
+                if (t) {
+                    document.getElementById('t_amount').value = t.amount;
+                    document.getElementById('t_motif').value = t.motif;
+                    document.getElementById('t_beneficiary').value = t.beneficiary_name || '';
+                    document.getElementById('t_project').value = t.project_id || '';
+                    document.getElementById('t_date').value = t.date;
+                }
+            } catch(e) { console.error(e); }
+        }
+
+        function closeModal() {
+            document.getElementById('cashModal').classList.remove('show');
+            currentEditingId = null;
+        }
+
+        async function deleteTransaction(id) {
+            if (!await notify.confirm('Voulez-vous vraiment supprimer cette transaction ?')) return;
+            try {
+                await api.delete('/cash/' + id);
+                loadTransactions();
+            } catch(e) { notify.error("Erreur lors de la suppression"); }
+        }
+
+        async function downloadDecharge(id) {
+            utils.downloadPdf(`/api/cash/${id}/pdf`);
+        }
+
+        function switchView(view, btn) {
+            document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('cash-grid').style.display = view === 'grid' ? 'grid' : 'none';
+            document.getElementById('cash-table-container').style.display = view === 'table' ? 'block' : 'none';
+        }
+
+        async function loadTransactions() {
+            try {
+                allTransactions = await api.get('/cash?_=' + Date.now()) || [];
+                
+                const totalIn = allTransactions.filter(t => t.type === 'entrée').reduce((acc, t) => acc + parseFloat(t.amount), 0);
+                const totalOut = allTransactions.filter(t => t.type === 'sortie').reduce((acc, t) => acc + parseFloat(t.amount), 0);
+                
+                document.getElementById('stat-total-in').textContent = totalIn.toLocaleString() + ' XAF';
+                document.getElementById('stat-total-out').textContent = totalOut.toLocaleString() + ' XAF';
+                document.getElementById('stat-balance').textContent = (totalIn - totalOut).toLocaleString() + ' XAF';
+
+                renderCaisseDisplay();
+            } catch (error) { console.error(error); }
+        }
+
+        function renderCaisseDisplay() {
+            const grid = document.getElementById('cash-grid');
+            const list = document.getElementById('cash-list');
+            const btnContainer = document.getElementById('caisse-grid-actions');
+            const btnToggle = document.getElementById('btn-toggle-caisse');
+
+            if (!allTransactions || allTransactions.length === 0) {
+                grid.innerHTML = '<div class="empty-state"><i class="fas fa-wallet" style="font-size:32px; opacity:0.2;"></i><p>Aucune transaction trouvée</p></div>';
+                list.innerHTML = '';
+                btnContainer.style.display = 'none';
+                return;
+            }
+
+            const toShow = allTransactions.slice(0, caisseGridLimit);
+
+            grid.innerHTML = toShow.map(t => `
+                <div class="cash-card">
+                    <div class="cash-card-header">
+                         <div class="c-amount ${t.type === 'entrée' ? 'text-green' : 'text-red'}">${t.type === 'entrée' ? '+' : '-'}${Number(t.amount).toLocaleString()} XAF</div>
+                         <div class="c-type ${t.type === 'entrée' ? 'bg-green' : 'bg-red'}">${t.type}</div>
+                    </div>
+                    <div class="c-motif">${t.motif}</div>
+                    <div class="c-meta">
+                         <item><i class="far fa-calendar-alt"></i> <span class="rt-date"></span> <span class="rt-time"></span></item>
+                         <item><i class="fas fa-tag"></i> ${t.category || 'Général'}</item>
+                         <item><i class="fas fa-user"></i> ${t.beneficiary_name || t.project_name || 'N/A'}</item>
+                    </div>
+                    <div class="c-actions">
+                         <button class="btn-icon btn-edit" title="Modifier" onclick="openModal('${t.type}', ${t.id})"><i class="fas fa-pen"></i></button>
+                         <button class="btn-icon" title="PDF" onclick="downloadDecharge(${t.id})" style="color:#06b6d4; background:rgba(6,182,212,0.1);"><i class="fas fa-file-pdf"></i></button>
+                         <button class="btn-icon btn-delete" title="Supprimer" onclick="deleteTransaction(${t.id})"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>
+            `).join('');
+
+            list.innerHTML = toShow.map(t => {
+                const d = new Date(t.date);
+                const isOut = t.type === 'sortie';
+                const iconColor = isOut ? '#ef4444' : '#10b981';
+                const iconBg = isOut ? 'rgba(239,68,68,0.1)' : 'rgba(16,185,129,0.1)';
+                const typeColor = isOut ? '#ef4444' : '#10b981';
+
+                return `
+                <tr>
+                    <td class="col-date">
+                        <span class="rt-date"></span>
+                        <span class="time rt-time"></span>
+                    </td>
+                    <td>
+                        <div class="action-cell">
+                            <div class="action-icon" style="color:${iconColor}; background:${iconBg}; border:1px solid ${iconBg.replace('0.1', '0.2')}">
+                                <i class="fas fa-${isOut ? 'arrow-up' : 'arrow-down'}"></i>
+                            </div>
+                            <div class="action-texts">
+                                <span class="action-title">${t.motif}</span>
+                                <span class="action-sub">Caisse</span>
+                            </div>
+                        </div>
+                    </td>
+                    <td><span class="type-badge" style="color:${typeColor}; background:${iconBg};">${t.type}</span></td>
+                    <td style="font-weight:700; color:${typeColor};">
+                        ${isOut ? '-' : '+'}${Number(t.amount).toLocaleString()} XAF
+                    </td>
+                    <td style="color:#64748b;">${t.beneficiary_name || t.project_name || '-'}</td>
+                    <td>
+                        <div style="display:flex; gap:8px; justify-content:flex-end;">
+                            <button class="btn-details" onclick="openModal('${t.type}', ${t.id})" title="Modifier"><i class="fas fa-pen"></i></button>
+                            <button class="btn-details" onclick="downloadDecharge(${t.id})" title="PDF"><i class="fas fa-file-pdf"></i></button>
+                            <button class="btn-details delete" onclick="deleteTransaction(${t.id})" title="Supprimer"><i class="fas fa-trash"></i></button>
+                        </div>
+                    </td>
+                </tr>`;
+            }).join('');
+
+            if (allTransactions.length > 10) {
+                btnContainer.style.display = 'block';
+                if (caisseGridLimit === 10) {
+                    btnToggle.innerHTML = `Voir plus (${allTransactions.length - 10} restants) <i class="fas fa-chevron-down" style="margin-left: 6px;"></i>`;
+                } else {
+                    btnToggle.innerHTML = `Voir moins <i class="fas fa-chevron-up" style="margin-left: 6px;"></i>`;
+                }
+            } else {
+                btnContainer.style.display = 'none';
+            }
+        }
+        document.getElementById('cashForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const data = {
+                type: document.getElementById('t_type').value,
+                amount: document.getElementById('t_amount').value,
+                motif: document.getElementById('t_motif').value,
+                beneficiary_name: document.getElementById('t_beneficiary').value,
+                project_id: document.getElementById('t_project').value,
+                currency: 'XAF',
+                date: currentEditingId ? document.getElementById('t_date').value : new Date().toISOString()
+            };
+
+            try {
+                if (currentEditingId) {
+                    await api.put('/cash/' + currentEditingId, data);
+                } else {
+                    await api.post('/cash', data);
+                }
+                closeModal();
+                loadTransactions();
+            } catch(e) { notify.error("Erreur lors de l'enregistrement"); }
+        };
+
+        function updateRealTimeClock() {
+            const now = new Date();
+            const dateStr = now.toLocaleDateString('fr-FR');
+            const timeStr = now.toLocaleTimeString('fr-FR');
+            document.querySelectorAll('.rt-date').forEach(el => el.textContent = dateStr);
+            document.querySelectorAll('.rt-time').forEach(el => el.textContent = timeStr);
+        }
+        setInterval(updateRealTimeClock, 1000);
+        updateRealTimeClock();
+
+    </script>
+</body>
+</html>

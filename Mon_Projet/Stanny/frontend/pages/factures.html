@@ -1,0 +1,489 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Factures - STATCOM SERVICES</title>
+    <link rel="icon" type="image/jpeg" href="/assets/img/logo.jpg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    
+    
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+
+        :root { --color-module: #3399ff; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Outfit', sans-serif; background: #0a0e1a; color: #e0e6f0; min-height: 100vh; display: flex; overflow: hidden; }
+
+        .main-content { flex: 1; display: flex; flex-direction: column; min-width: 0; overflow: hidden; margin-left: 260px; }
+        .top-header { height: 72px; display: flex; align-items: center; justify-content: space-between; padding: 0 32px; background: rgba(255,255,255,0.02); border-bottom: 1px solid rgba(255,255,255,0.06); flex-shrink: 0; }
+        .header-left h1 { font-size: 20px; font-weight: 700; color: #fff; line-height: 1.2; display: flex; align-items: center; gap: 10px; }
+        .header-left h1 i { color: #3399ff; }
+        .header-left p { font-size: 11px; color: rgba(255,255,255,0.4); font-weight: 500; margin-top: 2px; }
+        .header-right { display: flex; align-items: center; gap: 24px; }
+        
+        
+
+        .page-body { flex: 1; overflow-y: auto; padding: 32px; }
+
+        .stats-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 32px; }
+        .stat-card-mini { background: rgba(255, 255, 255, 0.03); border: 1px solid rgba(255, 255, 255, 0.06); border-radius: 16px; padding: 20px; display: flex; align-items: center; gap: 12px; }
+        .stat-icon-mini { width: 40px; height: 40px; border-radius: 10px; display: flex; align-items: center; justify-content: center; }
+
+        .view-controls { display: flex; align-items: center; }
+        .toggle-btns { display: flex; background: rgba(255,255,255,0.04); padding: 3px; border-radius: 10px; border: 1px solid rgba(255,255,255,0.05); }
+        .toggle-btn { padding: 6px 12px; border-radius: 7px; border: none; background: none; color: rgba(255,255,255,0.3); cursor: pointer; font-size: 11px; font-weight: 700; display: flex; align-items: center; gap: 6px; transition: 0.2s; }
+        .toggle-btn.active { background: rgba(51,153,255,0.1); color: #3399ff; }
+
+        .facture-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); gap: 20px; }
+        .facture-card { background: #131829 !important; border: 1px solid rgba(255,255,255,0.06); border-radius: 20px; padding: 24px; transition: all 0.3s ease; display: flex; flex-direction: column; gap: 16px; animation: fadeUp 0.5s ease both; cursor: pointer; position: relative; }
+        .facture-card:hover { background: #1e293b !important; transform: translateY(-4px); border-color: rgba(51,153,255,0.2); }
+        
+        .f-num { font-size: 11px; font-weight: 800; color: #3399ff; background: rgba(51,153,255,0.1); padding: 4px 10px; border-radius: 20px; }
+        .f-status { font-size: 10px; font-weight: 700; padding: 4px 10px; border-radius: 20px; text-transform: uppercase; }
+        .f-client { font-size: 16px; font-weight: 700; color: #fff; }
+        .f-footer { display: flex; justify-content: space-between; align-items: center; padding-top: 16px; border-top: 1px solid rgba(255,255,255,0.06); }
+        .f-amount { font-size: 18px; font-weight: 800; color: #fff; }
+
+        .status-pill { display: inline-flex; align-items: center; gap: 6px; padding: 6px 12px; border-radius: 6px; font-size: 11px; font-weight: 600; text-transform: uppercase; }
+        .status-paid { background: #ecfdf5 !important; color: #10b981 !important; border: 1px solid rgba(16, 185, 129, 0.2); }
+        .status-pending { background: #fffbeb !important; color: #f59e0b !important; border: 1px solid rgba(245, 158, 11, 0.2); }
+        .status-overdue { background: #fef2f2 !important; color: #ef4444 !important; border: 1px solid rgba(239, 68, 68, 0.2); }
+        .status-partial { background: #eff6ff !important; color: #3b82f6 !important; border: 1px solid rgba(59, 130, 246, 0.2); }
+
+        /* ─── Premium Data Table View ────────────────────────────────── */
+        .data-card { background: #ffffff !important; border: 1px solid #e2e8f0 !important; border-radius: 16px; overflow: hidden; padding: 16px 24px; box-shadow: 0 10px 30px rgba(0,0,0,0.03) !important; margin-top: 24px; margin-bottom: 24px; display: none; }
+        .premium-table { width: 100%; border-collapse: separate; border-spacing: 0; text-align: left; }
+        .premium-table th { padding: 16px 20px; font-size: 11px; font-weight: 800; color: var(--color-module) !important; text-transform: uppercase; letter-spacing: 1px; border-bottom: none !important; background: transparent !important; }
+        .premium-table td { padding: 16px 20px; font-size: 13px; background: #fff; border-bottom: 1px solid #f1f5f9 !important; vertical-align: middle; transition: 0.2s; color: #334155; }
+        .premium-table tr { transition: all 0.3s ease; }
+        .premium-table tr:hover td { background: #f8fafc; cursor: pointer; }
+        
+        .action-cell { display: flex; align-items: center; gap: 16px; }
+        .action-icon { width: 44px; height: 44px; border-radius: 12px; display: flex; align-items: center; justify-content: center; font-size: 18px; flex-shrink: 0; background: rgba(51, 153, 255, 0.08); color: var(--color-module); transition: transform 0.3s; border: 1px solid rgba(51, 153, 255, 0.15); }
+        .premium-table tr:hover .action-icon { transform: rotate(10deg) scale(1.1); }
+        .action-texts { display: flex; flex-direction: column; }
+        .action-title { font-weight: 700; color: #1e293b; font-size: 13px; margin-bottom: 3px; letter-spacing: 0.3px; }
+        .action-sub { font-size: 11px; color: #94a3b8; font-weight: 500; }
+        
+        .type-badge { padding: 6px 12px; border-radius: 6px; font-size: 10px; font-weight: 800; text-transform: uppercase; letter-spacing: 0.5px; border: none; }
+        .btn-details { width: 36px; height: 36px; border-radius: 8px; background: #f8fafc; border: 1px solid #e2e8f0; color: #64748b; display: flex; align-items: center; justify-content: center; cursor: pointer; transition: 0.2s; font-size: 14px; }
+        .btn-details:hover { background: #e2e8f0; color: #1e293b; transform: scale(1.05); }
+        .btn-details.delete { color: #ef4444; }
+        .btn-details.delete:hover { background: #fef2f2; border-color: #fca5a5; }
+        
+        .modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.85); backdrop-filter: blur(12px); display: none; align-items: center; justify-content: center; z-index: 100; padding: 20px; }
+        .modal-overlay.show { display: flex; }
+        .modal { background: #131829; border: 1px solid rgba(255,255,255,0.1); border-radius: 24px; width: 100%; max-width: 1100px; height: 95vh; display: flex; flex-direction: column; overflow: hidden; box-shadow: 0 40px 120px rgba(0,0,0,0.8); }
+        .modal-header { padding: 24px 32px; border-bottom: 1px solid rgba(255,255,255,0.06); display: flex; justify-content: space-between; align-items: center; }
+        .modal-body { display: flex; flex-direction: column; flex: 1; overflow-y: auto; padding: 32px; }
+        
+        .form-section { margin-bottom: 32px; }
+        .section-title { font-size: 12px; font-weight: 800; color: #3399ff; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+        .form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-bottom: 20px; }
+        .form-group { margin-bottom: 16px; }
+        .form-label { display: block; font-size: 11px; font-weight: 700; color: rgba(255,255,255,0.4); text-transform: uppercase; margin-bottom: 8px; }
+        .form-input, .form-select, .form-textarea { width: 100%; padding: 12px 16px; background: rgba(255,255,255,0.04); border: 1px solid rgba(255,255,255,0.08); border-radius: 12px; color: #fff; font-family: 'Outfit'; outline: none; }
+        .form-textarea { height: 60px; resize: none; font-size: 13px; }
+
+        .items-table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+        .items-table th { font-size: 10px; color: rgba(255,255,255,0.3); text-transform: uppercase; text-align: left; padding: 8px; border-bottom: 1px solid rgba(255,255,255,0.06); }
+        .items-table td { padding: 12px 8px; border-bottom: 1px solid rgba(255,255,255,0.03); }
+        .btn-add-item { width: 100%; padding: 12px; border: 1px dashed rgba(51,153,255,0.3); border-radius: 12px; color: #3399ff; background: none; cursor: pointer; margin-top: 10px; font-weight: 700; font-size: 13px; }
+        
+        .totals-box { margin-top: 24px; padding: 24px; background: rgba(255,255,255,0.02); border-radius: 16px; border: 1px solid rgba(255,255,255,0.05); }
+        .total-row { display: flex; justify-content: space-between; margin-bottom: 8px; font-size: 14px; color: rgba(255,255,255,0.6); }
+        .total-final { font-size: 24px; font-weight: 800; color: #fff; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 16px; margin-top: 16px; }
+
+
+
+
+        @keyframes fadeUp { from { opacity:0; transform: translateY(10px); } to { opacity:1; transform: translateY(0); } }
+        ::-webkit-scrollbar { width: 6px; }
+        ::-webkit-scrollbar-track { background: transparent; }
+        ::-webkit-scrollbar-thumb { background: rgba(51,153,255,0.3); border-radius: 10px; }
+
+
+       /* Modifie uniquement la boîte du formulaire de facture */
+#factureModal .modal {
+    position: absolute !important;
+    right: 40px !important;    /* Le pousse vers le bord droit */
+    left: auto !important;     /* Annule le centrage gauche automatique */
+    transform: none !important; /* Supprime le centrage CSS traditionnel */
+}
+
+
+
+
+    </style>
+</head>
+<body>
+    <aside class="sidebar" id="sidebar"></aside>
+
+    <main class="main-content">
+        <header class="top-header">
+            <div class="header-left">
+                <h1><i class="fas fa-file-invoice-dollar"></i>Gestion des Factures</h1>
+                <p>"La clarté fiscale au service de votre croissance."</p>
+            </div>
+            <div class="header-right">
+                <div class="view-controls">
+                    <div class="toggle-btns">
+                        <button class="toggle-btn active" onclick="switchView('grid', this)"><i class="fas fa-th"></i> Blocs</button>
+                        <button class="toggle-btn" onclick="switchView('table', this)"><i class="fas fa-list"></i> Liste</button>
+                    </div>
+                </div>
+                <button class="btn-primary btn-glow" onclick="openFactureModal()"><i class="fas fa-plus"></i> Nouvelle Facture</button>
+            </div>
+        </header>
+
+        <div class="page-body">
+            <div class="stats-grid">
+                <div class="stat-card-mini">
+                    <div class="stat-icon-mini" style="background:rgba(51,153,255,0.1); color:#3399ff;"><i class="fas fa-file-invoice-dollar"></i></div>
+                    <div><div class="stat-val-mini" id="total-factures">0</div><div class="stat-lab-mini">Total Invoices</div></div>
+                </div>
+                <div class="stat-card-mini">
+                    <div class="stat-icon-mini" style="background:rgba(34,197,94,0.1); color:#22c55e;"><i class="fas fa-check-double"></i></div>
+                    <div><div class="stat-val-mini" id="total-paid">0 XAF</div><div class="stat-lab-mini">Total Encaissé</div></div>
+                </div>
+                <div class="stat-card-mini">
+                    <div class="stat-icon-mini" style="background:rgba(239,68,68,0.1); color:#f87171;"><i class="fas fa-exclamation-triangle"></i></div>
+                    <div><div class="stat-val-mini" id="total-pending">0 XAF</div><div class="stat-lab-mini">Reste à Recouvrer</div></div>
+                </div>
+            </div>
+
+            <div id="facture-grid" class="facture-grid"></div>
+
+            <div id="facture-table-container" class="data-card">
+                <table class="premium-table">
+                    <thead>
+                        <tr>
+                            <th>Facture / Client</th>
+                            <th>Objet</th>
+                            <th>Status</th>
+                            <th>Total</th>
+                            <th style="text-align:right;">Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="facture-table"></tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <div class="modal-overlay" id="factureModal">
+        <div class="modal">
+            <div class="modal-header">
+                <h3 style="color:#fff; font-weight:800;" id="modalTitle">CRÉER UNE NOUVELLE FACTURE</h3>
+                <button class="btn-icon" onclick="closeFactureModal()"><i class="fas fa-times"></i></button>
+            </div>
+            <div class="modal-body">
+                <form id="factureForm">
+                    <input type="hidden" id="f_id">
+                    <div class="form-section">
+                        <div class="section-title"><i class="fas fa-info-circle"></i> Client & Détails</div>
+                        <div class="form-row">
+                            <div class="form-group"><label class="form-label">Client</label><select id="f_client_id" class="form-select" required></select></div>
+                            <div class="form-group"><label class="form-label">Date</label><input type="date" id="f_date" class="form-input" required></div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">Statut</label>
+                                <select id="f_status" class="form-select">
+                                    <option value="pending">En attente (En cours)</option>
+                                    <option value="paid">Payée complet</option>
+                                    <option value="partial">Partiel</option>
+                                    <option value="overdue">Hors délai</option>
+                                </select>
+                            </div>
+                            <div class="form-group"><label class="form-label">Remise globale (%)</label><input type="number" id="f_remise" class="form-input" value="0" min="0" oninput="calculateTotals()"></div>
+                        </div>
+                        <div class="form-group"><label class="form-label">Objet / Libellé de la Facture</label><input type="text" id="f_object" class="form-input" placeholder="Ex: Maintenance système..." required></div>
+                    </div>
+
+                    <div class="form-section">
+                        <div class="section-title"><i class="fas fa-list"></i> Prestations / Articles</div>
+                        <table class="items-table">
+                            <thead><tr><th style="width:50%;">Description</th><th>Qté</th><th>P.U (XAF)</th><th>Total</th><th></th></tr></thead>
+                            <tbody id="line-items"></tbody>
+                        </table>
+                        <button type="button" class="btn-add-item" onclick="addFactureRow()"><i class="fas fa-plus-circle"></i> Ajouter une ligne</button>
+                    </div>
+
+                    <div class="form-section">
+                        <div class="section-title"><i class="fas fa-calculator"></i> Taxes & Ajustements</div>
+                        <div class="form-row">
+                            <div class="form-group"><label class="form-label">TVA (%)</label><input type="number" id="f_tva" class="form-input" value="0" min="0" oninput="calculateTotals()"></div>
+                            <div class="form-group"><label class="form-label">Centime Additionnel (%)</label><input type="number" id="f_centime" class="form-input" value="0" min="0" oninput="calculateTotals()"></div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <div class="section-title"><i class="fas fa-pen-nib"></i> Somme en toutes lettres</div>
+                        <textarea id="f_total_in_words" class="form-textarea" placeholder="Obligatoire pour le PDF (Ex: Neuf cent mille CFA)" required></textarea>
+                    </div>
+
+                    <div class="totals-box">
+                        <div class="total-row"><span>Sous-total HT</span> <span id="val-subtotal">0 XAF</span></div>
+                        <div class="total-row"><span>Remise</span> <span id="val-discount" style="color:#f87171;">0 XAF</span></div>
+                        <div class="total-row"><span>TVA</span> <span id="val-tva">0 XAF</span></div>
+                        <div class="total-row total-final"><span>Total net à payer</span> <span id="val-total">0 XAF</span></div>
+                    </div>
+
+                    <button type="submit" class="btn-primary" id="submitBtn" style="width:100%; height:56px; justify-content:center; font-size:16px; margin-top:32px;">VALIDER ET GÉNÉRER LA FACTURE</button>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/assets/js/notify.js"></script>
+    <script src="/assets/js/api.js"></script>
+    <script src="/pages/utils.js"></script>
+    <script>
+        
+        let allFactures = [];
+        let itemsCount = 0;
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (!utils.checkAuth()) return;
+            utils.loadSidebar('factures.html', '#2563eb');
+            await loadInitialData();
+            loadFactures();
+        });
+
+        async function loadInitialData() {
+            try {
+                const clients = await api.get('/clients');
+                document.getElementById('f_client_id').innerHTML = '<option value="">Sélectionner un client</option>' + 
+                    clients.map(c => `<option value="${c.id}">${c.name}</option>`).join('');
+            } catch (e) { console.error(e); }
+        }
+
+        function switchView(view, btn) {
+            document.querySelectorAll('.toggle-btn').forEach(b => b.classList.remove('active'));
+            btn.classList.add('active');
+            document.getElementById('facture-grid').style.display = view === 'grid' ? 'grid' : 'none';
+            document.getElementById('facture-table-container').style.display = view === 'table' ? 'block' : 'none';
+        }
+
+        function formatCardDateTime(doc) {
+            const dateValue = doc.date || doc.created_at;
+            const timeValue = doc.created_at || doc.date;
+            const date = dateValue ? new Date(dateValue) : null;
+            const time = timeValue ? new Date(timeValue) : null;
+            const dateText = date && !Number.isNaN(date.getTime()) ? date.toLocaleDateString('fr-FR') : '-';
+            const timeText = time && !Number.isNaN(time.getTime()) ? time.toLocaleTimeString('fr-FR', { hour: '2-digit', minute: '2-digit', second: '2-digit' }) : '--:--:--';
+            return `<span style="display:flex; flex-direction:column; align-items:flex-end; gap:2px; font-size:11px; color:rgba(255,255,255,0.35);"><span>${dateText}</span><span style="color:rgba(255,255,255,0.55); font-variant-numeric:tabular-nums;">${timeText}</span></span>`;
+        }
+
+        function openFactureModal(data = null) {
+            document.getElementById('factureModal').classList.add('show');
+            document.getElementById('line-items').innerHTML = '';
+            document.getElementById('factureForm').reset();
+            document.getElementById('f_id').value = data ? data.id : '';
+            document.getElementById('modalTitle').textContent = data ? "MODIFICATION FACTURE #" + data.number : "CRÉER UNE NOUVELLE FACTURE";
+            document.getElementById('submitBtn').textContent = data ? "METTRE À JOUR LA FACTURE" : "VALIDER ET GÉNÉRER LA FACTURE";
+
+            if (data) {
+                document.getElementById('f_client_id').value = data.client_id;
+                document.getElementById('f_date').value = (data.date || '').split('T')[0];
+                document.getElementById('f_status').value = data.status || 'pending';
+                document.getElementById('f_remise').value = data.remise || 0;
+                document.getElementById('f_tva').value = data.tva || 0;
+                document.getElementById('f_centime').value = data.centime_additionnel || 0;
+                document.getElementById('f_object').value = data.object || '';
+                document.getElementById('f_total_in_words').value = data.total_in_words || '';
+                const items = typeof data.items === 'string' ? JSON.parse(data.items) : data.items;
+                (items || []).forEach(it => addFactureRow(it));
+            } else {
+                document.getElementById('f_date').value = new Date().toISOString().split('T')[0];
+                addFactureRow();
+            }
+            calculateTotals();
+        }
+
+        function closeFactureModal() { document.getElementById('factureModal').classList.remove('show'); }
+
+        function addFactureRow(item = null) {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><input type="text" class="form-input item-desc" placeholder="Désignation" value="${item ? (item.description || item.designation || '') : ''}" required></td>
+                <td><input type="number" class="form-input item-qty" value="${item ? (item.quantity || item.qty || 1) : 1}" oninput="calculateTotals()" required></td>
+                <td><input type="number" class="form-input item-pu" value="${item ? (item.unit_price || item.pu || 0) : 0}" oninput="calculateTotals()" required></td>
+                <td class="item-total" style="font-weight:700; color:#fff;">0</td>
+                <td><button type="button" onclick="this.closest('tr').remove(); calculateTotals();" class="btn-icon btn-delete" style="width:32px; height:32px;"><i class="fas fa-trash"></i></button></td>
+            `;
+            document.getElementById('line-items').appendChild(tr);
+            calculateTotals();
+        }
+
+        function calculateTotals() {
+            let subtotal = 0;
+            document.querySelectorAll('#line-items tr').forEach(row => {
+                const q = parseFloat(row.querySelector('.item-qty').value) || 0;
+                const p = parseFloat(row.querySelector('.item-pu').value) || 0;
+                const tot = q * p;
+                row.querySelector('.item-total').textContent = tot.toLocaleString();
+                subtotal += tot;
+            });
+
+            const remisePerc = parseFloat(document.getElementById('f_remise').value) || 0;
+            const tvaPerc = parseFloat(document.getElementById('f_tva').value) || 0;
+            const centimePerc = parseFloat(document.getElementById('f_centime').value) || 0;
+
+            const remiseVal = (subtotal * remisePerc) / 100;
+            const taxable = subtotal - remiseVal;
+            const tvaVal = (taxable * tvaPerc) / 100;
+            const centimeVal = (taxable * centimePerc) / 100;
+            const total = taxable + tvaVal + centimeVal;
+
+            document.getElementById('val-subtotal').textContent = subtotal.toLocaleString() + ' XAF';
+            document.getElementById('val-discount').textContent = '- ' + remiseVal.toLocaleString() + ' XAF';
+            document.getElementById('val-tva').textContent = '+ ' + (tvaVal + centimeVal).toLocaleString() + ' XAF';
+            document.getElementById('val-total').textContent = Math.round(total).toLocaleString() + ' XAF';
+        }
+
+        async function loadFactures() {
+            try {
+                const data = await api.get('/documents?type=facture');
+                if(!data) return;
+                allFactures = data;
+
+                // Stats
+                document.getElementById('total-factures').textContent = data.length;
+                const paidTotal = data.filter(f => f.status === 'paid').reduce((acc, f) => acc + parseFloat(f.total_amount || 0), 0);
+                const pendingTotal = data.filter(f => f.status !== 'paid').reduce((acc, f) => acc + parseFloat(f.total_amount || 0), 0);
+                document.getElementById('total-paid').textContent = paidTotal.toLocaleString() + ' XAF';
+                document.getElementById('total-pending').textContent = pendingTotal.toLocaleString() + ' XAF';
+
+                const grid = document.getElementById('facture-grid');
+                const table = document.getElementById('facture-table');
+
+                const statusLabels = {
+                    'pending': 'En attente',
+                    'paid': 'Payée',
+                    'partial': 'Partiel',
+                    'overdue': 'En retard'
+                };
+
+                grid.innerHTML = data.map(f => `
+                    <div class="facture-card" onclick="openFactureModal(${JSON.stringify(f).replace(/"/g, '&quot;')})">
+                        <div style="display:flex; justify-content:space-between; align-items:flex-start; gap:12px;">
+                            <span class="f-num">FACT #${f.number}</span>
+                            <div style="display:flex; flex-direction:column; align-items:flex-end; gap:6px;">
+                                <span class="f-status status-${f.status || 'pending'}">${statusLabels[f.status] || 'En attente'}</span>
+                                ${formatCardDateTime(f)}
+                            </div>
+                        </div>
+                        <div class="f-client">${f.client_name}</div>
+                        <div style="font-size:12px; color:rgba(255,255,255,0.4); line-height:1.4;">${f.object || '-'}</div>
+                        <div class="f-footer">
+                            <div class="f-amount">${Number(f.total_amount).toLocaleString()} XAF</div>
+                            <div style="display:flex; gap:8px;">
+                                <button onclick="event.stopPropagation(); openFactureModal(${JSON.stringify(f).replace(/"/g, '&quot;')})" class="btn-icon" title="Modifier" style="color:#3399ff; background:rgba(51,153,255,0.1);"><i class="fas fa-pen"></i></button>
+                                <button onclick="event.stopPropagation(); utils.downloadPdf('/api/documents/${f.id}/pdf')" class="btn-icon" title="Télécharger PDF" style="color:#06b6d4; background:rgba(6,182,212,0.1);"><i class="fas fa-file-pdf"></i></button>
+                                <button onclick="event.stopPropagation(); deleteFacture(${f.id})" class="btn-icon btn-delete" title="Supprimer"><i class="fas fa-trash-alt"></i></button>
+                            </div>
+                        </div>
+                    </div>
+                `).join('');
+
+                table.innerHTML = data.map(f => `
+                    <tr>
+                        <td>
+                            <div class="action-cell">
+                                <div class="action-icon">
+                                    <i class="fas fa-file-invoice-dollar"></i>
+                                </div>
+                                <div class="action-texts">
+                                    <span class="action-title">${f.client_name}</span>
+                                    <span class="action-sub">FACT #${f.number}</span>
+                                </div>
+                            </div>
+                        </td>
+                        <td style="color:#64748b; font-size:12px; max-width: 250px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">${f.object || '-'}</td>
+                        <td><span class="status-pill status-${f.status || 'pending'}">${statusLabels[f.status] || 'En attente'}</span></td>
+                        <td style="font-weight:800; color:#1e293b;">${Number(f.total_amount).toLocaleString()} XAF</td>
+                        <td>
+                            <div style="display:flex; gap:8px; justify-content:flex-end;">
+                                <button class="btn-details" onclick="openFactureModal(${JSON.stringify(f).replace(/"/g, '&quot;')})" title="Modifier"><i class="fas fa-pen"></i></button>
+                                <button class="btn-details" onclick="event.stopPropagation(); utils.downloadPdf('/api/documents/${f.id}/pdf')" title="Télécharger PDF" style="color:#0ea5e9;"><i class="fas fa-file-pdf"></i></button>
+                                <button class="btn-details delete" onclick="deleteFacture(${f.id})" title="Supprimer"><i class="fas fa-trash"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                `).join('');
+            } catch (e) { console.error(e); }
+        }
+
+        async function deleteFacture(id) {
+            if(!await notify.confirm("Êtes-vous sûr de vouloir supprimer cette facture ?")) return;
+            try {
+                const res = await api.delete('/documents/' + id);
+                if(res.success) { loadFactures(); }
+            } catch(e) { notify.error("Erreur: " + e.message); }
+        }
+
+        document.getElementById('factureForm').onsubmit = async (e) => {
+            e.preventDefault();
+            const id = document.getElementById('f_id').value;
+            const items = [];
+            document.querySelectorAll('#line-items tr').forEach(row => {
+                items.push({
+                    description: row.querySelector('.item-desc').value,
+                    quantity: parseFloat(row.querySelector('.item-qty').value),
+                    unit_price: parseFloat(row.querySelector('.item-pu').value),
+                    total: parseFloat(row.querySelector('.item-qty').value) * parseFloat(row.querySelector('.item-pu').value)
+                });
+            });
+
+            const subtotal = items.reduce((acc, it) => acc + it.total, 0);
+            const remiseVal = (subtotal * parseFloat(document.getElementById('f_remise').value)) / 100;
+            const taxable = subtotal - remiseVal;
+            const tvaVal = (taxable * parseFloat(document.getElementById('f_tva').value)) / 100;
+            const centimeVal = (taxable * parseFloat(document.getElementById('f_centime').value)) / 100;
+            const total = taxable + tvaVal + centimeVal;
+
+            const payload = {
+                type: 'facture',
+                client_id: parseInt(document.getElementById('f_client_id').value),
+                date: document.getElementById('d_date') ? document.getElementById('d_date').value : document.getElementById('f_date').value,
+                object: document.getElementById('f_object').value,
+                total_in_words: document.getElementById('f_total_in_words').value,
+                total_amount: Math.round(total),
+                items: items,
+                tva: parseFloat(document.getElementById('f_tva').value),
+                remise: parseFloat(document.getElementById('f_remise').value),
+                centime_additionnel: parseFloat(document.getElementById('f_centime').value),
+                status: document.getElementById('f_status').value
+            };
+
+            try {
+                if (id) {
+                    const res = await api.put('/documents/' + id, payload);
+                    if(res.success) {
+                        closeFactureModal();
+                        loadFactures();
+                        utils.downloadPdf(`/api/documents/${id}/pdf`);
+                    }
+                } else {
+                    const res = await api.post('/documents', payload);
+                    if(res.success) {
+                        closeFactureModal();
+                        loadFactures();
+                        utils.downloadPdf(`/api/documents/${res.id}/pdf`);
+                    }
+                }
+            } catch (err) { notify.error("Erreur lors de l'enregistrement : " + err.message); }
+        };
+        
+
+
+    </script>
+</body>
+</html>

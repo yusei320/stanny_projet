@@ -1,0 +1,3 @@
+/* Image binary content will be handled by the system since I am using write_to_file with the image path if possible, but actually I should use the image from the user. I can't "copy" the image directly but I can ask the system to save it.
+Actually, I'll use the provided image 2.
+*/

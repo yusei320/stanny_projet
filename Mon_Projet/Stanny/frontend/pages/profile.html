@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mon Profil Premium - STATCOM SERVICES</title>
+    <link rel="icon" type="image/jpeg" href="/assets/img/logo.jpg">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    
+
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&family=Outfit:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #3b82f6;
+            --primary-hover: #2563eb;
+            --success: #22c55e;
+            --danger: #ef4444;
+            --bg-dark: #0a0e1a;
+            --card-bg: rgba(255, 255, 255, 0.03);
+            --border-color: rgba(255, 255, 255, 0.08);
+            --text-main: #e0e6f0;
+            --text-muted: #94a3b8;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { 
+            font-family: 'Outfit', sans-serif; 
+            background: var(--bg-dark); 
+            color: var(--text-main); 
+            min-height: 100vh; 
+            display: flex;
+            overflow-x: hidden;
+            transition: background 0.3s, color 0.3s;
+        }
+
+        body.light-mode {
+            --bg-dark: #f8fafc;
+            --card-bg: #ffffff;
+            --border-color: #e2e8f0;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+        }
+
+        .main-content { flex: 1; display: flex; flex-direction: column; min-width: 0; height: 100vh; overflow-y: auto; margin-left: 260px; }
+
+        .hero-banner {
+            width: 100%;
+            height: 200px;
+            background: linear-gradient(135deg, #1e293b 0%, #0f172a 100%);
+            position: relative;
+            flex-shrink: 0;
+        }
+
+        .hero-container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 0 40px;
+            position: relative;
+            transform: translateY(-70px);
+            z-index: 10;
+        }
+
+        .avatar-container { position: relative; display: inline-block; }
+
+        .avatar-main {
+            width: 140px;
+            height: 140px;
+            border-radius: 50%;
+            border: 5px solid #fff;
+            background: #334155;
+            object-fit: cover;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+            display: block;
+        }
+
+        .avatar-edit-btn {
+            position: absolute;
+            bottom: 5px;
+            right: 5px;
+            width: 36px;
+            height: 36px;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #fff;
+            border: 3px solid var(--bg-dark);
+            cursor: pointer;
+            transition: 0.2s;
+        }
+        .avatar-edit-btn:hover { transform: scale(1.1); background: var(--primary-hover); }
+
+        .identity-block { margin-top: 15px; display: flex; flex-direction: column; gap: 4px; }
+        .name-row { display: flex; align-items: center; gap: 12px; }
+        .user-name { font-family: 'Inter', sans-serif; font-size: 24px; font-weight: 700; color: var(--text-main); }
+
+        .status-dot { width: 10px; height: 10px; background: var(--success); border-radius: 50%; position: relative; }
+        .status-dot::after {
+            content: ''; position: absolute; inset: -2px; border-radius: 50%; background: var(--success);
+            opacity: 0.4; animation: pulse 2s infinite;
+        }
+        @keyframes pulse { 0% { transform: scale(1); opacity: 0.4; } 70% { transform: scale(2.5); opacity: 0; } 100% { transform: scale(1); opacity: 0; } }
+
+        .status-text { font-size: 13px; font-weight: 600; color: var(--success); }
+
+        .user-bio {
+            margin-top: 12px; font-size: 14px; color: var(--text-main); max-width: 600px;
+            line-height: 1.6; opacity: 0.8; background: transparent; border: none;
+            border-bottom: 1px dashed var(--border-color); outline: none; width: 100%; resize: none;
+        }
+
+        .profile-sections {
+            max-width: 1000px; width: 100%; margin: -30px auto 40px; padding: 0 40px;
+            display: grid; gap: 24px;
+        }
+
+        .section-card {
+            background: var(--card-bg); border: 1px solid var(--border-color);
+            border-radius: 20px; padding: 24px; backdrop-filter: blur(10px);
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1);
+        }
+
+        .section-title { font-size: 16px; font-weight: 700; color: var(--text-main); margin-bottom: 24px; display: flex; align-items: center; gap: 10px; }
+        .section-title i { color: var(--primary); }
+
+        .form-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)); gap: 20px; }
+        .form-group { display: flex; flex-direction: column; gap: 8px; }
+
+        label { font-size: 11px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; }
+
+        .input-wrapper { position: relative; display: flex; align-items: center; }
+        .input-wrapper i { position: absolute; left: 14px; color: var(--text-muted); font-size: 14px; }
+
+        .form-input, .form-select {
+            width: 100%; padding: 12px 14px 12px 40px; background: rgba(255,255,255,0.04);
+            border: 1px solid var(--border-color); border-radius: 12px; color: var(--text-main);
+            font-family: inherit; font-size: 14px; outline: none; transition: 0.2s;
+        }
+        .light-mode .form-input, .light-mode .form-select { background: #f1f5f9; }
+        .form-input:focus, .form-select:focus { border-color: var(--primary); background: rgba(255,255,255,0.06); }
+
+        .toggle-row { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px solid var(--border-color); }
+        .toggle-row:last-child { border-bottom: none; }
+        .toggle-info h4 { font-size: 14px; font-weight: 600; color: var(--text-main); }
+        .toggle-info p { font-size: 12px; color: var(--text-muted); }
+
+        .switch { position: relative; display: inline-block; width: 44px; height: 24px; }
+        .switch input { opacity: 0; width: 0; height: 0; }
+        .slider { position: absolute; cursor: pointer; inset: 0; background-color: rgba(255,255,255,0.1); transition: .4s; border-radius: 24px; }
+        .slider:before { position: absolute; content: ""; height: 18px; width: 18px; left: 3px; bottom: 3px; background-color: white; transition: .4s; border-radius: 50%; }
+        input:checked + .slider { background-color: var(--success); }
+        input:checked + .slider:before { transform: translateX(20px); }
+
+
+
+        .footer-action-bar {
+            position: sticky; bottom: 0; width: 100%; background: var(--bg-dark);
+            backdrop-filter: blur(20px); border-top: 1px solid var(--border-color);
+            padding: 20px 40px; display: flex; align-items: center; justify-content: space-between; z-index: 100;
+        }
+
+
+
+
+
+        .delete-link { text-align: center; display: block; margin: 20px auto 40px; color: var(--text-muted); font-size: 11px; text-decoration: none; text-transform: uppercase; letter-spacing: 1px; transition: 0.2s; }
+        .delete-link:hover { color: var(--danger); }
+
+        /* Modal simple pour mdp */
+        .modal { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.8); z-index: 1000; align-items: center; justify-content: center; }
+        .modal.show { display: flex; }
+        .modal-content { background: var(--bg-dark); padding: 32px; border-radius: 20px; width: 400px; border: 1px solid var(--border-color); }
+
+        .phone-error { color: var(--danger); font-size: 10px; font-weight: 700; margin-top: 4px; display: none; }
+        
+        /* Congo Flag and Phone UI */
+        .phone-input-container { position: relative; display: flex; align-items: center; width: 100%; }
+        .congo-flag {
+            position: absolute; left: 12px; width: 24px; height: 16px;
+            background: linear-gradient(135deg, #009543 45%, #fbde4a 45%, #fbde4a 55%, #dc241f 55%);
+            border-radius: 2px; box-shadow: 0 1px 3px rgba(0,0,0,0.2);
+            z-index: 5; pointer-events: none;
+        }
+        .phone-prefix { position: absolute; left: 42px; font-size: 14px; font-weight: 600; color: var(--text-muted); pointer-events: none; }
+        .form-input.phone-field { padding-left: 85px; }
+
+        .masked-phone { font-size: 13px; color: var(--text-muted); font-weight: 500; display: flex; align-items: center; gap: 6px; }
+        .masked-phone i { font-size: 11px; opacity: 0.6; }
+    
+    
+    </style>
+</head>
+<body>
+    <aside class="sidebar" id="sidebar"></aside>
+
+    <main class="main-content">
+        <header class="top-header" style="height: 72px; display: flex; align-items: center; padding: 0 40px; background: rgba(255,255,255,0.02); border-bottom: 1px solid rgba(255,255,255,0.06); flex-shrink: 0;">
+            <button class="mobile-burger" onclick="utils.toggleSidebar()"><i class="fas fa-bars"></i></button>
+            <h1 style="font-size: 20px; font-weight: 700; color: #fff; margin: 0;"><i class="fas fa-user-circle" style="color:var(--primary); margin-right:10px;"></i>Mon Profil & Paramètres</h1>
+        </header>
+        <div class="hero-banner"></div>
+        <div class="hero-container">
+            <div class="avatar-container">
+                <img src="" id="userAvatar" class="avatar-main" alt="Avatar">
+                <div class="avatar-edit-btn" onclick="document.getElementById('avatarInput').click()">
+                    <i class="fas fa-camera"></i>
+                </div>
+                <input type="file" id="avatarInput" hidden accept="image/*" onchange="handleAvatarChange(event)">
+            </div>
+            <div class="identity-block">
+                <div class="name-row">
+                    <h2 class="user-name" id="display-name">Chargement...</h2>
+                    <div class="status-dot"></div>
+                    <span class="status-text">En ligne</span>
+                </div>
+                <div class="masked-phone" id="display-phone-masked">
+                    <i class="fas fa-phone-alt"></i> <span>+242 -- ••• •• ••</span>
+                </div>
+                <textarea class="user-bio" id="user-bio" maxlength="160" placeholder="Votre biographie..."></textarea>
+            </div>
+        </div>
+
+        <div class="profile-sections">
+            <!-- A. Contact -->
+            <div class="section-card">
+                <h3 class="section-title"><i class="fas fa-address-book"></i> Informations de contact</h3>
+                <div class="form-grid">
+                    <!-- Dummy inputs to trick browser autofill -->
+                    <input type="text" style="display:none" name="fakeusernameremembered">
+                    <input type="password" style="display:none" name="fakepasswordremembered">
+                    
+                    <div class="form-group">
+                        <label>Nom Complet</label>
+                        <div class="input-wrapper"><i class="fas fa-user"></i><input type="text" id="profile-display-name" class="form-input" autocomplete="off" placeholder="Saisissez votre nom complet"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>Email</label>
+                        <div class="input-wrapper"><i class="fas fa-envelope"></i><input type="email" id="profile-user-email" class="form-input" readonly autocomplete="off"></div>
+                    </div>
+                    <div class="form-group">
+                        <label>Téléphone (Congo-Brazzaville)</label>
+                        <div class="phone-input-container">
+                            <div class="congo-flag" title="Congo-Brazzaville"></div>
+                            <span class="phone-prefix">+242</span>
+                            <input type="tel" id="profile-user-phone" class="form-input phone-field" placeholder="06 000 00 00" maxlength="12" autocomplete="off">
+                        </div>
+                        <span id="phone-error" class="phone-error">Numéro invalide : 9 chiffres requis (06 ou 05)</span>
+                    </div>
+                    <div class="form-group">
+                        <label>Localisation</label>
+                        <div class="input-wrapper"><i class="fas fa-map-marker-alt"></i><input type="text" id="profile-user-location" class="form-input" autocomplete="off" placeholder="Votre ville..."></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- B. Sécurité -->
+            <div class="section-card">
+                <h3 class="section-title"><i class="fas fa-shield-alt"></i> Sécurité & Accès</h3>
+                <button class="btn-outline" onclick="openPasswordModal()" style="width:100%; margin-bottom:16px;">
+                    <i class="fas fa-key"></i> Modifier mon mot de passe
+                </button>
+                <div class="toggle-row">
+                    <div class="toggle-info">
+                        <h4>Double Authentification (2FA)</h4>
+                        <p>Ajouter une couche de sécurité par SMS ou Email.</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="user-2fa">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- C. Interface -->
+            <div class="section-card">
+                <h3 class="section-title"><i class="fas fa-desktop"></i> Interface & Préférences</h3>
+                <div class="form-grid" style="margin-bottom: 20px;">
+                    <div class="form-group">
+                        <label>Langue</label>
+                        <select id="user-lang" class="form-select">
+                            <option value="fr">Français</option>
+                            <option value="en">English</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Format de date</label>
+                        <select id="user-date-format" class="form-select">
+                            <option value="dd/MM/yyyy">JJ/MM/AAAA</option>
+                            <option value="yyyy-MM-dd">AAAA-MM-JJ</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="toggle-row">
+                    <div class="toggle-info">
+                        <h4>Mode Sombre</h4>
+                        <p>Appliquer le thème sombre à toute l'application.</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="user-dark-mode" onchange="toggleDarkModeUI(this.checked)">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+                <div class="toggle-row">
+                    <div class="toggle-info">
+                        <h4>Newsletter</h4>
+                        <p>Recevoir les nouveautés de STATCOM SERVICES.</p>
+                    </div>
+                    <label class="switch">
+                        <input type="checkbox" id="user-newsletter">
+                        <span class="slider"></span>
+                    </label>
+                </div>
+            </div>
+
+            <!-- D. Système -->
+            <div class="section-card">
+                <h3 class="section-title"><i class="fas fa-cogs"></i> Paramètres Système</h3>
+                <div class="form-grid">
+                    <div class="form-group">
+                        <label>Devise par défaut</label>
+                        <select id="sys-currency" class="form-select">
+                            <option value="XAF">XAF - Franc CFA</option>
+                            <option value="EUR">EUR - Euro</option>
+                            <option value="USD">USD - Dollar</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Préfixe de facturation</label>
+                        <input type="text" id="sys-invoice-prefix" class="form-input">
+                    </div>
+                    <div class="form-group">
+                        <label>N° Facture Suivant</label>
+                        <input type="number" id="sys-invoice-number" class="form-input">
+                    </div>
+                </div>
+                <div class="form-group" style="margin-top: 20px;">
+                    <label>Pied de page des documents</label>
+                    <textarea id="sys-invoice-footer" class="form-input" style="height: 80px; padding: 12px; resize: none;"></textarea>
+                </div>
+            </div>
+
+            <!-- E. Notifications -->
+            <div class="section-card">
+                <h3 class="section-title"><i class="fas fa-bell"></i> Notifications & Alertes</h3>
+                <div class="toggle-row">
+                    <div class="toggle-info"><h4>Rappels de tâches</h4><p>Alertes pour les échéances de projets.</p></div>
+                    <label class="switch"><input type="checkbox" id="sys-task-reminders"><span class="slider"></span></label>
+                </div>
+                <div class="toggle-row">
+                    <div class="toggle-info"><h4>Alertes de paiement</h4><p>Notifier en cas de retard de paiement.</p></div>
+                    <label class="switch"><input type="checkbox" id="sys-invoice-reminders"><span class="slider"></span></label>
+                </div>
+            </div>
+
+            <a href="#" class="delete-link" onclick="deleteMyAccount()">Supprimer définitivement mon compte</a>
+        </div>
+
+        <div class="footer-action-bar">
+            <button class="btn-delete btn-outline" onclick="utils.logout()"><i class="fas fa-door-open"></i> Déconnexion</button>
+            <button class="btn-primary" id="btn-save-all" onclick="saveAllData()">ENREGISTRER TOUT</button>
+        </div>
+    </main>
+
+    <!-- Modal Changement MDP -->
+    <div id="pwModal" class="modal">
+        <div class="modal-content">
+            <h3 style="margin-bottom:20px;">Changer de mot de passe</h3>
+            <div class="form-group" style="margin-bottom:15px;">
+                <label>Mot de passe actuel</label>
+                <input type="password" id="old-pw" class="form-input" style="padding-left:15px;">
+            </div>
+            <div class="form-group" style="margin-bottom:20px;">
+                <label>Nouveau mot de passe</label>
+                <input type="password" id="new-pw" class="form-input" style="padding-left:15px;">
+            </div>
+            <div style="display:flex; gap:10px;">
+                <button class="btn-primary" style="flex:1;" onclick="confirmPasswordChange()">Confirmer</button>
+                <button class="btn-outline" style="flex:1;" onclick="closePasswordModal()">Annuler</button>
+            </div>
+        </div>
+    </div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="/assets/js/notify.js"></script>
+    <script src="/assets/js/api.js"></script>
+    <script src="/pages/utils.js"></script>
+    <script>
+        
+
+        document.addEventListener('DOMContentLoaded', async () => {
+            if (!utils.checkAuth()) return;
+            utils.loadSidebar('profile.html', '#6366f1');
+            loadAllData();
+        });
+
+        let currentAvatarBase64 = null;
+
+        function toggleDarkModeUI(enabled) {
+            if (enabled) document.body.classList.remove('light-mode');
+            else document.body.classList.add('light-mode');
+        }
+
+        async function loadAllData() {
+            try {
+                const profileRes = await api.get('/profile');
+                if (profileRes && profileRes.success) {
+                    const u = profileRes.user;
+                    document.getElementById('display-name').textContent = u.name;
+                    // Les champs de formulaire restent vides par défaut comme demandé, sauf l'email (lecture seule)
+                    document.getElementById('profile-user-email').value = u.email;
+                    
+                    document.getElementById('user-lang').value = u.language || 'fr';
+                    document.getElementById('user-dark-mode').checked = u.dark_mode !== false;
+                    document.getElementById('user-newsletter').checked = !!u.newsletter;
+                    document.getElementById('user-2fa').checked = !!u.two_factor_enabled;
+                    toggleDarkModeUI(u.dark_mode !== false);
+
+                    // Update masked phone display
+                    if (u.phone) {
+                        const masked = formatPhoneMasked(u.phone);
+                        document.getElementById('display-phone-masked').querySelector('span').textContent = masked;
+                    }
+
+                    if (u.profile_image) document.getElementById('userAvatar').src = u.profile_image;
+                    else document.getElementById('userAvatar').src = "https://ui-avatars.com/api/?name=" + encodeURIComponent(u.name);
+                }
+
+                const sRes = await api.get('/settings');
+                if (sRes && sRes.settings) {
+                    const s = sRes.settings;
+                    document.getElementById('sys-currency').value = s.currency || 'XAF';
+                    document.getElementById('user-date-format').value = s.dateFormat || 'dd/MM/yyyy';
+                    document.getElementById('sys-invoice-prefix').value = s.invoicePrefix || 'FAC';
+                    document.getElementById('sys-invoice-number').value = s.invoiceStartNumber || 1;
+                    document.getElementById('sys-invoice-footer').value = s.invoiceFooter || '';
+                    document.getElementById('sys-task-reminders').checked = !!s.taskReminders;
+                    document.getElementById('sys-invoice-reminders').checked = !!s.invoiceReminders;
+                }
+            } catch (e) { console.error(e); }
+        }
+
+        // Real-time phone formatting (06 000 00 00)
+        document.getElementById('profile-user-phone').addEventListener('input', (e) => {
+            let val = e.target.value.replace(/\D/g, '');
+            if (val.length > 9) val = val.substring(0, 9);
+            
+            let formatted = '';
+            if (val.length > 0) {
+                formatted = val.substring(0, 2);
+                if (val.length > 2) {
+                    formatted += ' ' + val.substring(2, 5);
+                    if (val.length > 5) {
+                        formatted += ' ' + val.substring(5, 7);
+                        if (val.length > 7) {
+                            formatted += ' ' + val.substring(7, 9);
+                        }
+                    }
+                }
+            }
+            e.target.value = formatted;
+        });
+
+        function formatPhoneMasked(num) {
+            if (!num) return '+242 -- ••• •• ••';
+            const clean = num.replace(/\s/g, '');
+            if (clean.length < 2) return '+242 -- ••• •• ••';
+            const prefix = clean.substring(0, 2);
+            return `+242 ${prefix} ••• •• ••`;
+        }
+
+        function validateCongoPhone(num) {
+            const regex = /^0[56][0-9]{7}$/;
+            return regex.test(num.replace(/\s/g, ''));
+        }
+
+        async function saveAllData() {
+            const phoneInput = document.getElementById('profile-user-phone').value;
+            const errorEl = document.getElementById('phone-error');
+            
+            if (phoneInput && !validateCongoPhone(phoneInput)) {
+                errorEl.style.display = 'block';
+                document.getElementById('profile-user-phone').focus();
+                return;
+            } else {
+                errorEl.style.display = 'none';
+            }
+
+            const btn = document.getElementById('btn-save-all');
+            btn.textContent = "ENCOURS..."; btn.disabled = true;
+
+            try {
+                // If the user left the "blank" fields empty, we don't send empty strings to avoid overwriting their data.
+                // We use their current displayed name/bio/etc if the input is empty.
+                const nameInput = document.getElementById('profile-display-name').value.trim();
+                const finalName = nameInput || document.getElementById('display-name').textContent;
+                
+                const locationInput = document.getElementById('profile-user-location').value.trim();
+                const finalLocation = locationInput || null; // Let the backend handle it or leave as is. Actually, if empty, we just send empty or null.
+                // Wait, if we send null, COALESCE will use the existing value in the database!
+                
+                const payload = {
+                    name: finalName,
+                    bio: document.getElementById('user-bio').value || null,
+                    phone: phoneInput || null,
+                    location: locationInput || null,
+                    language: document.getElementById('user-lang').value,
+                    dark_mode: document.getElementById('user-dark-mode').checked,
+                    newsletter: document.getElementById('user-newsletter').checked,
+                    two_factor_enabled: document.getElementById('user-2fa').checked,
+                    profile_image: currentAvatarBase64 || null
+                };
+
+                // 1. Profile
+                const updatedUser = await api.put('/profile', payload);
+                if (updatedUser) {
+                    localStorage.setItem('user', JSON.stringify(updatedUser));
+                    utils.loadSidebar(); // Reload sidebar to reflect changes
+                }
+
+                // 2. Settings
+                await api.post('/settings', {
+                    currency: document.getElementById('sys-currency').value,
+                    dateFormat: document.getElementById('user-date-format').value,
+                    invoicePrefix: document.getElementById('sys-invoice-prefix').value,
+                    invoiceStartNumber: document.getElementById('sys-invoice-number').value,
+                    invoiceFooter: document.getElementById('sys-invoice-footer').value,
+                    taskReminders: document.getElementById('sys-task-reminders').checked,
+                    invoiceReminders: document.getElementById('sys-invoice-reminders').checked
+                });
+
+                notify.success("Tout a été sauvegardé avec succès !");
+                location.reload();
+            } catch (err) { notify.error(err.message); }
+            finally { btn.textContent = "ENREGISTRER TOUT"; btn.disabled = false; }
+        }
+
+        function handleAvatarChange(e) {
+            const file = e.target.files[0];
+            if (!file) return;
+            const reader = new FileReader();
+            reader.onload = (ev) => {
+                currentAvatarBase64 = ev.target.result;
+                document.getElementById('userAvatar').src = currentAvatarBase64;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function openPasswordModal() { document.getElementById('pwModal').classList.add('show'); }
+        function closePasswordModal() { document.getElementById('pwModal').classList.remove('show'); }
+
+        async function confirmPasswordChange() {
+            const oldPw = document.getElementById('old-pw').value;
+            const newPw = document.getElementById('new-pw').value;
+            if (!oldPw || !newPw) return notify.error("Veuillez remplir les deux champs.");
+            
+            try {
+                const res = await api.put('/profile/password', { currentPassword: oldPw, newPassword: newPw });
+                if (res.success) {
+                    notify.success("Mot de passe modifié !");
+                    closePasswordModal();
+                }
+            } catch(e) { notify.error(e.message); }
+        }
+
+        async function deleteMyAccount() {
+            if (await notify.info("ATTENTION", "Supprimer votre compte effacera toutes vos données. Continuer ?")) {
+                try {
+                    await api.delete('/profile');
+                    localStorage.clear();
+                    window.location.href = '../auth/login.html';
+                } catch(e) { notify.error(e.message); }
+            }
+        }
+    </script>
+</body>
+</html>
